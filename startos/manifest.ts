@@ -7,8 +7,8 @@ export const manifest = setupManifest({
   wrapperRepo: 'https://github.com/schjonhaug/canary-startos/',
   upstreamRepo: 'https://github.com/schjonhaug/canary/',
   supportSite: 'https://github.com/schjonhaug/canary/issues/',
-  marketingSite: 'https://github.com/schjonhaug/canary/',
-  donationUrl: null,
+  marketingSite: 'https://canarybitcoin.com',
+  donationUrl: 'https://canarybitcoin.com/donations',
   docsUrl:
     'https://github.com/schjonhaug/canary-startos/blob/master/instructions.md',
   description: {
@@ -28,12 +28,12 @@ Perfect for monitoring your cold storage wallets or watching family members' wal
   images: {
     frontend: {
       source: {
-        dockerTag: 'schjonhaug/canary-frontend:v1.3.1',
+        dockerTag: 'schjonhaug/canary-frontend:v1.4.0',
       },
     },
     backend: {
       source: {
-        dockerTag: 'schjonhaug/canary-backend:v1.3.1',
+        dockerTag: 'schjonhaug/canary-backend:v1.4.0',
       },
     },
   },
