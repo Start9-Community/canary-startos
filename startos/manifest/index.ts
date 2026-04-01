@@ -5,7 +5,7 @@ export const manifest = setupManifest({
   id: 'canary',
   title: 'Canary',
   license: 'Elastic-2.0',
-  packageRepo: 'https://github.com/schjonhaug/canary-startos/tree/update/040',
+  packageRepo: 'https://github.com/schjonhaug/canary-startos',
   upstreamRepo: 'https://github.com/schjonhaug/canary/',
   marketingUrl: 'https://canarybitcoin.com',
   docsUrls: [
@@ -32,7 +32,7 @@ export const manifest = setupManifest({
       description: fulcrumDescription,
       metadata: {
         title: 'Fulcrum',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/fulcrum-startos/refs/heads/update/040/icon.png',
+        icon: 'https://raw.githubusercontent.com/Start9Labs/fulcrum-startos/refs/heads/master/icon.png',
       },
     },
     electrs: {
@@ -40,7 +40,7 @@ export const manifest = setupManifest({
       description: electrsDescription,
       metadata: {
         title: 'Electrs',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/electrs-startos/refs/heads/update/040/icon.svg',
+        icon: 'https://raw.githubusercontent.com/Start9Labs/electrs-startos/refs/heads/master/icon.svg',
       },
     },
   },
