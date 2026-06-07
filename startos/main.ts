@@ -1,7 +1,6 @@
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
 import { getLocalExplorerEnv } from './localExplorers'
-import { getLocalNtfyEnv } from './localNtfy'
 import { sdk } from './sdk'
 import { serverPort, uiPort } from './utils'
 
@@ -20,7 +19,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const electrum = store.electrum
   const mountpoint = '/app/data'
   const localExplorerEnv = await getLocalExplorerEnv(effects)
-  const localNtfyEnv = getLocalNtfyEnv(store.ntfy)
 
   /**
    * ======================== Daemons ========================
@@ -54,7 +52,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
           CANARY_SYNC_INTERVAL: '60',
           JWT_SECRET: store.jwtSecret,
           ...localExplorerEnv,
-          ...localNtfyEnv,
         },
       },
       ready: {

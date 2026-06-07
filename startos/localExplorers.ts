@@ -10,9 +10,7 @@ type ExplorerInterface = {
 
 type ServiceInterfaceWithUrls = {
   addressInfo?: {
-    nonLocal: {
-      format(format: 'urlstring'): string[]
-    }
+    format(format: 'urlstring'): string[]
   } | null
 } | null
 
@@ -50,7 +48,7 @@ function formatInterfaceUrls(
     return []
   }
 
-  const urls = addressInfo.nonLocal.format('urlstring')
+  const urls = addressInfo.format('urlstring')
   return uniqueUrls(urls)
 }
 

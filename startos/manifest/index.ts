@@ -5,7 +5,6 @@ import {
   fulcrumDescription,
   long,
   mempoolDescription,
-  ntfyDescription,
   short,
 } from './i18n'
 
@@ -62,14 +61,6 @@ export const manifest = setupManifest({
       metadata: {
         title: 'Bitcoin Explorer',
         icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-explorer-startos/refs/heads/master/icon.svg',
-      },
-    },
-    ntfy: {
-      optional: true,
-      description: ntfyDescription,
-      metadata: {
-        title: 'ntfy',
-        icon: 'https://raw.githubusercontent.com/Start9-Community/ntfy-startos/refs/heads/master/icon.svg',
       },
     },
   },
