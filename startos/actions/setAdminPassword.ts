@@ -9,10 +9,10 @@ export const setAdminPassword = sdk.Action.withoutInput(
   async () => ({
     name: i18n('Set Admin Password'),
     description: i18n(
-      'Generate a new random password for the Canary admin account. This replaces any existing password.',
+      '<p>Generate a new random password for the Canary admin account.</p><p>This action can only run while Canary is stopped, so the backend loads the new password the next time it starts.</p>',
     ),
     warning: null,
-    allowedStatuses: 'any',
+    allowedStatuses: 'only-stopped',
     group: null,
     visibility: 'enabled',
   }),
@@ -26,20 +26,11 @@ export const setAdminPassword = sdk.Action.withoutInput(
 
     return {
       version: '1',
-      title: i18n('Canary Login Credentials'),
-      message: i18n('Use these credentials to sign in to Canary.'),
+      title: i18n('Canary Admin Password'),
+      message: i18n('Use this password to sign in to Canary.'),
       result: {
         type: 'group',
         value: [
-          {
-            type: 'single',
-            name: i18n('Username'),
-            description: null,
-            value: 'admin@local',
-            masked: false,
-            copyable: true,
-            qr: false,
-          },
           {
             type: 'single',
             name: i18n('Password'),

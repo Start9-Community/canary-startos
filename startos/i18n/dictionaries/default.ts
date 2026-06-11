@@ -24,10 +24,9 @@ const dict = {
 
   // actions/setAdminPassword.ts
   'Set Admin Password': 40,
-  'Generate a new random password for the Canary admin account. This replaces any existing password.': 41,
-  'Canary Login Credentials': 42,
-  'Use these credentials to sign in to Canary.': 43,
-  Username: 44,
+  '<p>Generate a new random password for the Canary admin account.</p><p>This action can only run while Canary is stopped, so the backend loads the new password the next time it starts.</p>': 41,
+  'Canary Admin Password': 42,
+  'Use this password to sign in to Canary.': 43,
   Password: 45,
 
   // init/watchCredentials.ts

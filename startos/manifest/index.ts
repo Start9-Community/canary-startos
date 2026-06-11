@@ -1,5 +1,12 @@
 import { setupManifest } from '@start9labs/start-sdk'
-import { electrsDescription, fulcrumDescription, long, short } from './i18n'
+import {
+  bitcoinExplorerDescription,
+  electrsDescription,
+  fulcrumDescription,
+  long,
+  mempoolDescription,
+  short,
+} from './i18n'
 
 export const manifest = setupManifest({
   id: 'canary',
@@ -14,12 +21,12 @@ export const manifest = setupManifest({
   images: {
     frontend: {
       source: {
-        dockerTag: 'schjonhaug/canary-frontend:v1.5.0',
+        dockerTag: 'schjonhaug/canary-frontend:v1.5.2',
       },
     },
     backend: {
       source: {
-        dockerTag: 'schjonhaug/canary-backend:v1.5.0',
+        dockerTag: 'schjonhaug/canary-backend:v1.5.2',
       },
     },
   },
@@ -38,6 +45,22 @@ export const manifest = setupManifest({
       metadata: {
         title: 'Electrs',
         icon: 'https://raw.githubusercontent.com/Start9Labs/electrs-startos/refs/heads/master/icon.svg',
+      },
+    },
+    mempool: {
+      optional: true,
+      description: mempoolDescription,
+      metadata: {
+        title: 'Mempool',
+        icon: 'https://raw.githubusercontent.com/Start9Labs/mempool-startos/refs/heads/master/icon.svg',
+      },
+    },
+    'bitcoin-explorer': {
+      optional: true,
+      description: bitcoinExplorerDescription,
+      metadata: {
+        title: 'Bitcoin Explorer',
+        icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-explorer-startos/refs/heads/master/icon.svg',
       },
     },
   },

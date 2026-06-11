@@ -9,14 +9,14 @@
 
 - A **Web UI** for Canary on the bundled `ui` interface.
 - A watch-only monitor that looks up your wallets through your own local Electrum server — **Fulcrum** or **Electrs**. Addresses never leave your StartOS.
-- An admin account (`admin@local`) whose password is generated and rotated by a StartOS action.
+- A built-in admin account whose password is generated and rotated by a StartOS action.
 
 ## Getting set up
 
 1. Install **Fulcrum** or **Electrs** on StartOS and let it fully sync. Canary will not start until one is selected and running.
 2. On first install, StartOS posts a critical **Set Admin Password** task. Run it and copy the generated password to a password manager — you'll need it to sign in.
 3. Run the **Select Electrum Server** action and pick which dependency Canary should talk to (defaults to Fulcrum).
-4. Open the **Web UI** and sign in with `admin@local` and the password from step 2.
+4. Open the **Web UI** and sign in with the password from step 2.
 
 ## Using Canary
 
@@ -39,7 +39,7 @@ Canary can push transaction events to your phone via [ntfy.sh](https://ntfy.sh):
 
 #### Using the StartOS ntfy service (optional)
 
-If you'd rather keep notifications fully self-hosted, install Start9's **ntfy** package and wire Canary to it:
+If you'd rather keep notifications fully self-hosted, install Start9's **ntfy** package and wire Canary to it manually:
 
 1. On ntfy, run the **Provision Publisher** action with a publisher ID of `canary` and the topic you want Canary to use. ntfy returns a token — copy it.
 2. In Canary's settings, set the **ntfy server URL** to `http://ntfy.startos` (the in-cluster address — *not* your LAN or Tor URL; Canary publishes server-side, similar to the upstream Umbrel guidance) and add the publisher token as the authorization credential. Paste the same topic from step 1.
@@ -52,4 +52,4 @@ Set per-wallet thresholds in the Web UI to fire when a balance goes **above**, *
 ### Actions
 
 - **Select Electrum Server** — pick **Fulcrum** or **Electrs** as Canary's address-lookup backend. Re-run any time to switch.
-- **Set Admin Password** — generate a new random password for `admin@local`. Use this to rotate or recover access.
+- **Set Admin Password** — generate a new random password for the built-in admin account. Stop Canary before running it to rotate or recover access.
