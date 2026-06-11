@@ -3,7 +3,7 @@ export const DEFAULT_LANG = 'en_US'
 const dict = {
   // interfaces.ts
   'Web UI': 1,
-  'The web interface of Canary': 2,
+  'The web interface of Canary Wallet': 2,
 
   // main.ts
   'The server is ready': 10,
@@ -20,17 +20,17 @@ const dict = {
   'Select which Electrum server to use for address lookups': 24,
 
   // dependencies.ts
-  'Canary requires an Electrum server to look up addresses': 30,
+  'Canary Wallet requires an Electrum server to look up addresses': 30,
 
   // actions/setAdminPassword.ts
   'Set Admin Password': 40,
-  '<p>Generate a new random password for the Canary admin account.</p><p>This action can only run while Canary is stopped, so the backend loads the new password the next time it starts.</p>': 41,
-  'Canary Admin Password': 42,
-  'Use this password to sign in to Canary.': 43,
+  '<p>Generate a new random password for the Canary Wallet admin account.</p><p>This action can only run while Canary Wallet is stopped, so the backend loads the new password the next time it starts.</p>': 41,
+  'Canary Wallet Admin Password': 42,
+  'Use this password to sign in to Canary Wallet.': 43,
   Password: 45,
 
   // init/watchCredentials.ts
-  'Set the admin password before signing in to Canary': 46,
+  'Set the admin password before signing in to Canary Wallet': 46,
 } as const
 
 /**

@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="icon.png" alt="Canary Logo" width="21%">
+  <img src="icon.png" alt="Canary Wallet Logo" width="21%">
 </p>
 
-# Canary on StartOS
+# Canary Wallet on StartOS
 
 > Everything not listed in this document should behave the same as upstream
-> Canary. If a feature, setting, or behavior is not mentioned here, the
+> Canary Wallet. If a feature, setting, or behavior is not mentioned here, the
 > upstream documentation is accurate and fully applicable — see the
 > Documentation section of `instructions.md` for links.
 
-[Canary](https://github.com/schjonhaug/canary/) is a Bitcoin wallet watcher: it tracks addresses and descriptors and tells you when they move, reading everything from an Electrum server rather than from a third party. This package runs it in self-hosted mode, wires it to whichever Electrum server you run, and points its transaction links at your own block explorers if you have any.
+[Canary Wallet](https://github.com/schjonhaug/canary/) is a Bitcoin wallet watcher: it tracks addresses and descriptors and tells you when they move, reading everything from an Electrum server rather than from a third party. This package runs it in self-hosted mode, wires it to whichever Electrum server you run, and points its transaction links at your own block explorers if you have any.
 
 - **Upstream repo:** <https://github.com/schjonhaug/canary/>
 - **Wrapper repo:** <https://github.com/Start9-Community/canary-startos>
@@ -74,7 +74,7 @@ One model, holding the three things upstream cannot decide for itself.
 
 All three are read reactively, so changing any of them re-runs `main` and the server restarts with the new value.
 
-Canary's own settings are its business and live in the same volume; the package neither seeds nor rewrites them.
+Canary Wallet's own settings are its business and live in the same volume; the package neither seeds nor rewrites them.
 
 ## Dependencies
 
@@ -87,11 +87,11 @@ Canary's own settings are its business and live in the same volume; the package 
 | Mempool          | Never required — used only for explorer links, if installed       |
 | Bitcoin Explorer | Never required — used only for explorer links, if installed       |
 
-**Canary cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, the package declares no dependency at all and raises a task instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not.
+**Canary Wallet cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, the package declares no dependency at all and raises a task instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not.
 
-The selected server's address is resolved over the internal bridge, pinned to the **plaintext** leg: both Fulcrum and Electrs publish a plaintext and a TLS address on that binding, and Canary speaks the plaintext protocol. Until the selected server's binding exists the address resolves to nothing and the service refuses to start, healing on its own once it appears.
+The selected server's address is resolved over the internal bridge, pinned to the **plaintext** leg: both Fulcrum and Electrs publish a plaintext and a TLS address on that binding, and Canary Wallet speaks the plaintext protocol. Until the selected server's binding exists the address resolves to nothing and the service refuses to start, healing on its own once it appears.
 
-**Mempool and Bitcoin Explorer are a different kind of optional.** They are never depended on; the package simply looks for them and, if present, hands Canary their browser-reachable addresses so transaction links point at your own explorer instead of a public one. Nothing breaks when they are absent — the links just go elsewhere.
+**Mempool and Bitcoin Explorer are a different kind of optional.** They are never depended on; the package simply looks for them and, if present, hands Canary Wallet their browser-reachable addresses so transaction links point at your own explorer instead of a public one. Nothing breaks when they are absent — the links just go elsewhere.
 
 Only addresses a browser can actually open are passed: the internal bridge and loopback are filtered out, and anything that is not HTTP or HTTPS is dropped.
 
@@ -101,7 +101,7 @@ One interface.
 
 | Interface | Id   | Type | Port | Description                 |
 | --------- | ---- | ---- | ---- | --------------------------- |
-| Web UI    | `ui` | ui   | 3000 | The web interface of Canary |
+| Web UI    | `ui` | ui   | 3000 | The web interface of Canary Wallet |
 
 Bound on the `ui-multi` MultiHost over HTTP and not masked. The back end listens on 3001 inside the service and is never exported.
 
@@ -122,12 +122,12 @@ Two actions, and between them they are the whole of setup.
 
 ### Select Electrum Server
 
-Chooses which Electrum server Canary reads from. Run it when its task appears, and again to switch servers.
+Chooses which Electrum server Canary Wallet reads from. Run it when its task appears, and again to switch servers.
 
 - **What it changes:** `electrum` in the store — and with it the declared dependency, the resolved server address, and whether the task is raised.
 - **Cost:** the service restarts and reconnects to the new server.
 - **Repeat safety:** idempotent; the last choice wins.
-- **What to expect after switching:** the newly selected server becomes a required running dependency, and the previous one stops being one. Canary re-reads history from the new server rather than migrating anything.
+- **What to expect after switching:** the newly selected server becomes a required running dependency, and the previous one stops being one. Canary Wallet re-reads history from the new server rather than migrating anything.
 
 ### Set Admin Password
 
@@ -160,13 +160,13 @@ Two checks, one per daemon.
 | `server` | "Server"        | An HTTP request to a chain-data endpoint | 60s          |
 | `web`    | "Web interface" | Port 3000 is listening                   | default      |
 
-**The server's check is a real query, not a port probe** — it asks for current block headers, which only succeeds once the server has reached the Electrum server. So a failing "Server" check most often means the Electrum server is unreachable or still syncing, rather than Canary being broken.
+**The server's check is a real query, not a port probe** — it asks for current block headers, which only succeeds once the server has reached the Electrum server. So a failing "Server" check most often means the Electrum server is unreachable or still syncing, rather than Canary Wallet being broken.
 
 The two daemons do not require one another, so the web interface can be up and serving while the server is not ready.
 
 ## Backups and Restore
 
-The `main` volume is copied wholesale — `sdk.Backups.ofVolumes('main')`. That is Canary's own data plus the store, meaning the watched addresses, the Electrum selection, the admin password, and the session secret all travel together.
+The `main` volume is copied wholesale — `sdk.Backups.ofVolumes('main')`. That is Canary Wallet's own data plus the store, meaning the watched addresses, the Electrum selection, the admin password, and the session secret all travel together.
 
 A restored instance comes back configured and raises no tasks. It does still need its Electrum server present on the new box — the selection is restored, but the dependency has to actually be installed and running there.
 

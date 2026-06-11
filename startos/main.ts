@@ -10,7 +10,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
    *
    * In this section, we fetch any resources or run any desired preliminary commands.
    */
-  console.info('Starting Canary!')
+  console.info('Starting Canary Wallet!')
 
   const store = await storeJson.read().const(effects)
   if (!store) {
