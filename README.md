@@ -90,7 +90,7 @@ Canary runs as two separate containers: a backend API server and a frontend web 
 | Variable | Value | Purpose |
 |----------|-------|---------|
 | `CANARY_NETWORK` | `mainnet` | Bitcoin network |
-| `CANARY_ELECTRUM_URL` | `tcp://<electrum>.startos:50001` | Electrum server address |
+| `CANARY_ELECTRUM_URL` | `tcp://<electrum-bridge-ip>:50001` | Electrum server address, resolved over the internal LXC bridge |
 | `CANARY_BIND_ADDRESS` | `0.0.0.0:3001` | Backend bind address |
 | `CANARY_DATA_DIR` | `/app/data` | Data directory |
 | `CANARY_MODE` | `self-hosted` | Running mode |

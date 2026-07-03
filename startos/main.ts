@@ -2,7 +2,7 @@ import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
 import { getLocalExplorerEnv } from './localExplorers'
 import { sdk } from './sdk'
-import { serverPort, uiPort } from './utils'
+import { getElectrumUrl, serverPort, uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   /**
@@ -17,6 +17,13 @@ export const main = sdk.setupMain(async ({ effects }) => {
     throw new Error('No store.json')
   }
   const electrum = store.electrum
+  if (!electrum) {
+    throw new Error('No Electrum server selected')
+  }
+  const electrumUrl = await getElectrumUrl(effects, electrum)
+  if (!electrumUrl) {
+    throw new Error('Electrum server bridge address not yet available')
+  }
   const mountpoint = '/app/data'
   const localExplorerEnv = await getLocalExplorerEnv(effects)
 
@@ -29,7 +36,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
    */
   return sdk.Daemons.of(effects)
     .addDaemon('server', {
-      subcontainer: await sdk.SubContainer.of(
+      subcontainer: sdk.SubContainer.of(
         effects,
         { imageId: 'backend' },
         sdk.Mounts.of().mountVolume({
@@ -44,7 +51,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
         command: sdk.useEntrypoint(),
         env: {
           CANARY_NETWORK: 'mainnet',
-          CANARY_ELECTRUM_URL: `tcp://${electrum}.startos:50001`,
+          CANARY_ELECTRUM_URL: electrumUrl,
           CANARY_BIND_ADDRESS: `0.0.0.0:${serverPort}`,
           CANARY_DATA_DIR: mountpoint,
           CANARY_MODE: 'self-hosted',
@@ -70,7 +77,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
       requires: [],
     })
     .addDaemon('web', {
-      subcontainer: await sdk.SubContainer.of(
+      subcontainer: sdk.SubContainer.of(
         effects,
         { imageId: 'frontend' },
         null,

@@ -1,9 +1,13 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const v_1_5_2_0 = VersionInfo.of({
-  version: '1.5.2:0',
+  version: '1.5.2:1',
   releaseNotes: {
-    en_US: `Canary v1.5.2 rejects invalid xpub descriptors before they can create wallets that cannot sync correctly, and adds recovery handling so failed or stuck wallet records can be deleted and recreated. It also fixes Genesis wallet/address-watch syncing edge cases, and includes StartOS local transaction explorer support.`,
+    en_US: 'Internal updates (start-sdk 2.0.x)',
+    es_ES: 'Actualizaciones internas (start-sdk 2.0.x)',
+    de_DE: 'Interne Aktualisierungen (start-sdk 2.0.x)',
+    pl_PL: 'Aktualizacje wewnętrzne (start-sdk 2.0.x)',
+    fr_FR: 'Mises à jour internes (start-sdk 2.0.x)',
   },
   migrations: {},
 })

@@ -5,6 +5,10 @@
 - [Canary upstream README](https://github.com/schjonhaug/canary#readme) — features, supported wallet types, and notification options.
 - [Canary issue tracker](https://github.com/schjonhaug/canary/issues) — bugs and feature requests.
 
+## Requirements & upgrade notes
+
+- **StartOS 0.4.0-beta.10 or later is required.** Canary now reaches your Electrum server (Fulcrum or Electrs) and any local block explorers over StartOS's internal LXC bridge instead of the deprecated `.startos` hostname, which needs the beta.10 backend.
+
 ## What you get on StartOS
 
 - A **Web UI** for Canary on the bundled `ui` interface.

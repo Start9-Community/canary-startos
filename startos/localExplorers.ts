@@ -1,27 +1,26 @@
+import { utils } from '@start9labs/start-sdk'
 import { sdk } from './sdk'
 
 type Effects = Parameters<Parameters<typeof sdk.setupMain>[0]>[0]['effects']
 
 type ExplorerInterface = {
   packageId: 'mempool' | 'bitcoin-explorer'
-  interfaceId: 'webui' | 'ui'
+  // Host id (the sdk.MultiHost.of group) and the interface id exported on it.
+  hostId: string
+  interfaceId: string
   envVar: 'CANARY_MEMPOOL_URLS' | 'CANARY_BTC_RPC_EXPLORER_URLS'
 }
-
-type ServiceInterfaceWithUrls = {
-  addressInfo?: {
-    format(format: 'urlstring'): string[]
-  } | null
-} | null
 
 const explorerInterfaces: ExplorerInterface[] = [
   {
     packageId: 'mempool',
+    hostId: 'main',
     interfaceId: 'webui',
     envVar: 'CANARY_MEMPOOL_URLS',
   },
   {
     packageId: 'bitcoin-explorer',
+    hostId: 'ui-multi',
     interfaceId: 'ui',
     envVar: 'CANARY_BTC_RPC_EXPLORER_URLS',
   },
@@ -40,28 +39,33 @@ function uniqueUrls(urls: string[]): string[] {
   return [...new Set(urls.filter(isBrowserSafeUrl))]
 }
 
-function formatInterfaceUrls(
-  serviceInterface: ServiceInterfaceWithUrls,
+// The interface's browser-navigable URLs (LAN / Tor / clearnet), excluding the
+// LXC bridge and loopback which the user's browser can't reach.
+function interfaceUrls(
+  host: utils.FilledHost | null,
+  interfaceId: string,
 ): string[] {
-  const addressInfo = serviceInterface?.addressInfo
-  if (!addressInfo) {
+  const iface =
+    host &&
+    Object.values(host.bindings)
+      .flatMap((b) => Object.values(b.interfaces))
+      .find((i) => i.id === interfaceId)
+  if (!iface) {
     return []
   }
-
-  const urls = addressInfo.format('urlstring')
-  return uniqueUrls(urls)
+  return uniqueUrls(iface.addressInfo.nonLocal.format('urlstring'))
 }
 
 async function getExplorerUrls(
   effects: Effects,
-  { packageId, interfaceId }: ExplorerInterface,
+  { packageId, hostId, interfaceId }: ExplorerInterface,
 ): Promise<string[]> {
-  const serviceInterface = await sdk.serviceInterface
-    .get(effects, { packageId, id: interfaceId })
+  return sdk.host
+    .get(effects, { hostId, packageId }, (host) =>
+      interfaceUrls(host, interfaceId),
+    )
     .const()
-    .catch(() => null)
-
-  return formatInterfaceUrls(serviceInterface)
+    .catch(() => [])
 }
 
 export async function getLocalExplorerEnv(
