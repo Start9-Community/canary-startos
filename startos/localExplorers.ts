@@ -1,4 +1,6 @@
 import { utils } from '@start9labs/start-sdk'
+import { uiHostId as btcExplorerHostId } from 'bitcoin-explorer-startos/startos/interfaces'
+import { mainHostId as mempoolHostId } from 'mempool-startos/startos/utils'
 import { sdk } from './sdk'
 
 type Effects = Parameters<Parameters<typeof sdk.setupMain>[0]>[0]['effects']
@@ -14,13 +16,13 @@ type ExplorerInterface = {
 const explorerInterfaces: ExplorerInterface[] = [
   {
     packageId: 'mempool',
-    hostId: 'main',
+    hostId: mempoolHostId,
     interfaceId: 'webui',
     envVar: 'CANARY_MEMPOOL_URLS',
   },
   {
     packageId: 'bitcoin-explorer',
-    hostId: 'ui-multi',
+    hostId: btcExplorerHostId,
     interfaceId: 'ui',
     envVar: 'CANARY_BTC_RPC_EXPLORER_URLS',
   },

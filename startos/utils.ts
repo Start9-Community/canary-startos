@@ -1,49 +1,91 @@
-import { T, utils } from '@start9labs/start-sdk'
+import { T } from '@start9labs/start-sdk'
+import {
+  electrumHostId as electrsHostId,
+  port as electrsPort,
+} from 'electrs-startos/startos/utils'
+import {
+  electrumPort as fulcrumPort,
+  mainHostId as fulcrumHostId,
+} from 'fulcrum-startos/startos/utils'
 import { sdk } from './sdk'
 
 export const serverPort = 3001
 export const uiPort = 3000
 
-// Host ids (the sdk.MultiHost.of groups) exporting the electrum interface on
-// each supported server — distinct from the interface id ('main') they share.
-export const electrumHostId = { fulcrum: 'main', electrs: 'electrum' } as const
-const electrumInterfaceId = 'main'
-
 /**
- * The IPv4 LXC-bridge hostname/port for an interface on an already-resolved
- * host. Pure — call it INSIDE a `sdk.host` map fn so `.const()` narrows its
- * reactivity to just this address. `.startos` DNS / container IPs are
- * deprecated; containers reach each other over this bridge.
+ * Bridge address (`10.0.3.1:<assigned external port>`) of a dependency's
+ * binding, as a minimal reactive value. Chain `.const()` in main: the mapped
+ * string only changes when the address itself does, so main restarts exactly
+ * on dependency install/uninstall/port-change and never on dependency
+ * updates. Chain `.once()` in an action context. `fallbackPort` keeps the
+ * value non-null while the dependency is absent — sanctioned only for tor's
+ * allocator-guaranteed SOCKS 9050. Drop-in for the planned SDK
+ * `sdk.host.getBridgeAddress` helper.
  */
-const bridgeAddr = (host: utils.FilledHost | null, interfaceId: string) => {
-  const iface =
-    host &&
-    Object.values(host.bindings)
-      .flatMap((b) => Object.values(b.interfaces))
-      .find((i) => i.id === interfaceId)
-  return iface
-    ? iface.addressInfo.filter({
-        kind: 'bridge',
-        predicate: (h) => h.metadata.kind === 'ipv4' && !h.ssl,
-      }).hostnames[0]
-    : undefined
-}
-
-/**
- * The selected electrum server's `tcp://host:port` over the bridge (replaces
- * `${electrum}.startos:50001`). Returns undefined until the server is reachable.
- */
-export const getElectrumUrl = (
+export function bridgeAddress(
   effects: T.Effects,
-  electrum: keyof typeof electrumHostId,
-) =>
-  sdk.host
-    .get(
+  opts: {
+    packageId: string
+    hostId: string
+    internalPort: number
+    fallbackPort: number
+  },
+): { const(): Promise<string>; once(): Promise<string> }
+export function bridgeAddress(
+  effects: T.Effects,
+  opts: { packageId: string; hostId: string; internalPort: number },
+): { const(): Promise<string | null>; once(): Promise<string | null> }
+export function bridgeAddress(
+  effects: T.Effects,
+  opts: {
+    packageId: string
+    hostId: string
+    internalPort: number
+    fallbackPort?: number
+  },
+) {
+  const watchable = async () => {
+    const osIp = await sdk.getOsIp(effects)
+    return sdk.host.get(
       effects,
-      { hostId: electrumHostId[electrum], packageId: electrum },
+      { packageId: opts.packageId, hostId: opts.hostId },
       (host) => {
-        const addr = bridgeAddr(host, electrumInterfaceId)
-        return addr && `tcp://${addr.hostname}:${addr.port}`
+        const port =
+          host?.bindings[opts.internalPort]?.net.assignedPort ??
+          opts.fallbackPort
+        return port != null ? `${osIp}:${port}` : null
       },
     )
-    .const()
+  }
+  return {
+    const: async () => (await watchable()).const(),
+    once: async () => (await watchable()).once(),
+  }
+}
+
+// Each supported Electrum server's host id and internal (plaintext) electrum
+// port, imported from the server package so canary tracks its binding without
+// hardcoding. Keyed by package id (also the dependency id in dependencies.ts).
+const electrumBinding = {
+  fulcrum: { hostId: fulcrumHostId, internalPort: fulcrumPort },
+  electrs: { hostId: electrsHostId, internalPort: electrsPort },
+} as const
+
+/**
+ * The selected Electrum server's `tcp://<bridge ip>:<assigned port>` for
+ * `CANARY_ELECTRUM_URL` (replaces `${electrum}.startos:50001`). A reactive
+ * `.const()` on just the bridge address (doctrine v3): a server update is 0
+ * restarts, install/uninstall/port-change is one healing restart. Resolves
+ * null until the selected server's binding exists — main.ts throws until then
+ * and the `.const()` heals when it appears.
+ */
+export const getElectrumUrl = async (
+  effects: T.Effects,
+  electrum: keyof typeof electrumBinding,
+) => {
+  const addr = await bridgeAddress(effects, {
+    packageId: electrum,
+    ...electrumBinding[electrum],
+  }).const()
+  return addr && `tcp://${addr}`
+}
