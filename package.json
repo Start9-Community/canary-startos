@@ -6,13 +6,17 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@start9labs/start-sdk": "1.5.2"
+    "@start9labs/start-sdk": "2.0.6",
+    "bitcoin-explorer-startos": "github:Start9-Community/bitcoin-explorer-startos#next",
+    "electrs-startos": "github:Start9-Community/electrs-startos#next",
+    "fulcrum-startos": "github:Start9Labs/fulcrum-startos#next",
+    "mempool-startos": "github:Start9Labs/mempool-startos#next"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
     "@vercel/ncc": "^0.38.4",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "prettier": {
     "trailingComma": "all",
