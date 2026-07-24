@@ -1,7 +1,7 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.5.2:1',
+  version: '1.5.2:2',
   releaseNotes: {
     en_US:
       'Internal updates (start-sdk 2.0.x); Canary no longer restarts when its Electrum server is updated',
