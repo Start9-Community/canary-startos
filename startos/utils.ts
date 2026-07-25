@@ -21,7 +21,7 @@ const electrumBinding = {
 } as const
 
 /**
- * The selected Electrum server's `tcp://<bridge ip>:<assigned port>` for
+ * The selected Electrum server's `tcp://<bridge ip>:<port>` for
  * `CANARY_ELECTRUM_URL` (replaces `${electrum}.startos:50001`). A reactive
  * `.const()` on just the bridge address (doctrine v3): a server update is 0
  * restarts, install/uninstall/port-change is one healing restart. Resolves
@@ -32,10 +32,13 @@ export const getElectrumUrl = async (
   effects: T.Effects,
   electrum: keyof typeof electrumBinding,
 ) => {
+  // Both servers bind electrum as `secure: null` with `addSsl`, publishing a
+  // plaintext and a TLS bridge address; we speak `tcp://`, so pin the plaintext.
   const addr = await sdk.host
     .getBridgeAddress(effects, {
       packageId: electrum,
       ...electrumBinding[electrum],
+      ssl: false,
     })
     .const()
   return addr && `tcp://${addr}`
