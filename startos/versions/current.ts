@@ -1,7 +1,7 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.5.2:4',
+  version: '1.5.2:5',
   releaseNotes: {
     en_US:
       'Internal updates to how Canary resolves its Electrum server address.',
