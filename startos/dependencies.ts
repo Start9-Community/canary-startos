@@ -18,7 +18,11 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
     return {
       electrs: {
         kind: 'running',
-        versionRange: '>=0.11.1:11',
+        // Earlier revisions fetch blocks on bitcoind's unprivileged p2p
+        // listener, where Canary's address-history queries get the connection
+        // dropped — and electrs exits rather than reconnecting, so it lands in
+        // a restart loop under exactly this workload.
+        versionRange: '>=0.11.1:14',
         healthChecks: ['electrs', 'sync'],
       },
     }
