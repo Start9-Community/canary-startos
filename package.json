@@ -6,7 +6,7 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@start9labs/start-sdk": "2.0.7",
+    "@start9labs/start-sdk": "2.0.9",
     "bitcoin-explorer-startos": "github:Start9-Community/bitcoin-explorer-startos#next",
     "electrs-startos": "github:Start9-Community/electrs-startos#next",
     "fulcrum-startos": "github:Start9Labs/fulcrum-startos#next",
