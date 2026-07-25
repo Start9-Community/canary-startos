@@ -34,12 +34,12 @@
 
 ## Image and Container Runtime
 
-| Property | Value |
-|----------|-------|
-| Image (backend) | `schjonhaug/canary-backend` (upstream unmodified) |
+| Property         | Value                                              |
+| ---------------- | -------------------------------------------------- |
+| Image (backend)  | `schjonhaug/canary-backend` (upstream unmodified)  |
 | Image (frontend) | `schjonhaug/canary-frontend` (upstream unmodified) |
-| Architectures | x86_64, aarch64 (as provided by upstream images) |
-| Entrypoint | Default upstream entrypoints |
+| Architectures    | x86_64, aarch64 (as provided by upstream images)   |
+| Entrypoint       | Default upstream entrypoints                       |
 
 Canary runs as two separate containers: a backend API server and a frontend web UI.
 
@@ -47,8 +47,8 @@ Canary runs as two separate containers: a backend API server and a frontend web 
 
 ## Volume and Data Layout
 
-| Volume | Mount Point | Purpose |
-|--------|-------------|---------|
+| Volume | Mount Point           | Purpose         |
+| ------ | --------------------- | --------------- |
 | `main` | `/app/data` (backend) | All Canary data |
 
 **Key paths on the `main` volume:**
@@ -59,11 +59,11 @@ Canary runs as two separate containers: a backend API server and a frontend web 
 
 ## Installation and First-Run Flow
 
-| Step | Upstream | StartOS |
-|------|----------|---------|
-| Installation | Docker Compose | Install from marketplace |
-| Electrum server | Manual configuration | Select via action (Fulcrum or Electrs) |
-| Login | Set via environment | Auto-generated; set/reset via the Set Admin Password action |
+| Step            | Upstream             | StartOS                                                     |
+| --------------- | -------------------- | ----------------------------------------------------------- |
+| Installation    | Docker Compose       | Install from marketplace                                    |
+| Electrum server | Manual configuration | Select via action (Fulcrum or Electrs)                      |
+| Login           | Set via environment  | Auto-generated; set/reset via the Set Admin Password action |
 
 **First-run steps:**
 
@@ -77,37 +77,37 @@ Canary runs as two separate containers: a backend API server and a frontend web 
 
 ## Configuration Management
 
-| StartOS-Managed | Upstream-Managed |
-|-----------------|------------------|
-| Electrum server selection (Fulcrum/Electrs) | Wallet management |
-| Network configuration (mainnet) | Notification settings (ntfy.sh) |
-| Sync interval (60 seconds) | Language preferences |
-| Admin password (auto-generated) | All other settings via web UI |
-| Data directory | |
+| StartOS-Managed                             | Upstream-Managed                |
+| ------------------------------------------- | ------------------------------- |
+| Electrum server selection (Fulcrum/Electrs) | Wallet management               |
+| Network configuration (mainnet)             | Notification settings (ntfy.sh) |
+| Sync interval (60 seconds)                  | Language preferences            |
+| Admin password (auto-generated)             | All other settings via web UI   |
+| Data directory                              |                                 |
 
 **Environment variables set by StartOS:**
 
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| `CANARY_NETWORK` | `mainnet` | Bitcoin network |
-| `CANARY_ELECTRUM_URL` | `tcp://<electrum-bridge-ip>:50001` | Electrum server address, resolved over the internal LXC bridge |
-| `CANARY_BIND_ADDRESS` | `0.0.0.0:3001` | Backend bind address |
-| `CANARY_DATA_DIR` | `/app/data` | Data directory |
-| `CANARY_MODE` | `self-hosted` | Running mode |
-| `CANARY_SELF_HOSTED_ADMIN_PASSWORD` | (auto-generated) | Admin account password |
-| `CANARY_SYNC_INTERVAL` | `60` | Sync interval in seconds |
-| `CANARY_MEMPOOL_URLS` | (auto-detected, optional) | Local Mempool explorer URLs |
-| `CANARY_BTC_RPC_EXPLORER_URLS` | (auto-detected, optional) | Local Bitcoin Explorer URLs |
-| `CANARY_TX_EXPLORER_PLATFORM` | `startos` when local explorers are available | Local explorer platform label |
-| `JWT_SECRET` | (auto-generated) | Session-token signing secret |
+| Variable                            | Value                                        | Purpose                                                        |
+| ----------------------------------- | -------------------------------------------- | -------------------------------------------------------------- |
+| `CANARY_NETWORK`                    | `mainnet`                                    | Bitcoin network                                                |
+| `CANARY_ELECTRUM_URL`               | `tcp://<electrum-bridge-ip>:50001`           | Electrum server address, resolved over the internal LXC bridge |
+| `CANARY_BIND_ADDRESS`               | `0.0.0.0:3001`                               | Backend bind address                                           |
+| `CANARY_DATA_DIR`                   | `/app/data`                                  | Data directory                                                 |
+| `CANARY_MODE`                       | `self-hosted`                                | Running mode                                                   |
+| `CANARY_SELF_HOSTED_ADMIN_PASSWORD` | (auto-generated)                             | Admin account password                                         |
+| `CANARY_SYNC_INTERVAL`              | `60`                                         | Sync interval in seconds                                       |
+| `CANARY_MEMPOOL_URLS`               | (auto-detected, optional)                    | Local Mempool explorer URLs                                    |
+| `CANARY_BTC_RPC_EXPLORER_URLS`      | (auto-detected, optional)                    | Local Bitcoin Explorer URLs                                    |
+| `CANARY_TX_EXPLORER_PLATFORM`       | `startos` when local explorers are available | Local explorer platform label                                  |
+| `JWT_SECRET`                        | (auto-generated)                             | Session-token signing secret                                   |
 
 ---
 
 ## Network Access and Interfaces
 
-| Interface | Port | Protocol | Purpose |
-|-----------|------|----------|---------|
-| Web UI | 3000 | HTTP | Canary dashboard |
+| Interface | Port | Protocol | Purpose          |
+| --------- | ---- | -------- | ---------------- |
+| Web UI    | 3000 | HTTP     | Canary dashboard |
 
 The backend API runs on port 3001 internally and is accessed by the frontend container. Only the frontend (port 3000) is exposed to the user.
 
@@ -126,32 +126,32 @@ The backend API runs on port 3001 internally and is accessed by the frontend con
 
 Choose which Electrum server to use for address lookups.
 
-| Property | Value |
-|----------|-------|
-| Availability | Any status |
-| Visibility | Always visible |
-| Inputs | Select: Fulcrum or Electrs |
+| Property     | Value                      |
+| ------------ | -------------------------- |
+| Availability | Any status                 |
+| Visibility   | Always visible             |
+| Inputs       | Select: Fulcrum or Electrs |
 
 ### Set Admin Password
 
 Generate a new random password for the Canary admin account. On install a critical task prompts you to run this before the service starts; to reset a lost or compromised password later, stop Canary, run this action, then start Canary again. Canary uses the fixed self-hosted username internally, so users only need the generated password.
 
-| Property | Value |
-|----------|-------|
-| Availability | Stopped only |
-| Visibility | Always visible (also surfaced as a critical task on install) |
-| Inputs | None |
+| Property     | Value                                                        |
+| ------------ | ------------------------------------------------------------ |
+| Availability | Stopped only                                                 |
+| Visibility   | Always visible (also surfaced as a critical task on install) |
+| Inputs       | None                                                         |
 
 ---
 
 ## Dependencies
 
-| Dependency | Required | Purpose |
-|------------|----------|---------|
-| Fulcrum | One of Fulcrum or Electrs required | Electrum server for blockchain lookups |
-| Electrs | One of Fulcrum or Electrs required | Electrum server for blockchain lookups |
-| Mempool | Optional | Local transaction explorer links |
-| Bitcoin Explorer | Optional | Local transaction explorer links |
+| Dependency       | Required                           | Purpose                                |
+| ---------------- | ---------------------------------- | -------------------------------------- |
+| Fulcrum          | One of Fulcrum or Electrs required | Electrum server for blockchain lookups |
+| Electrs          | One of Fulcrum or Electrs required | Electrum server for blockchain lookups |
+| Mempool          | Optional                           | Local transaction explorer links       |
+| Bitcoin Explorer | Optional                           | Local transaction explorer links       |
 
 One of Fulcrum or Electrs must be installed and running. If no Electrum server is selected, a critical task is created at startup blocking the service until resolved.
 
@@ -172,10 +172,10 @@ One of Fulcrum or Electrs must be installed and running. If no Electrum server i
 
 ## Health Checks
 
-| Check | Display Name | Method | Grace Period | Messages |
-|-------|--------------|--------|--------------|----------|
-| Backend | Server | HTTP check on `/api/block-headers/current` (port 3001) | 60s | Ready / Not ready |
-| Frontend | Web interface | Port listening check (port 3000) | Default | Ready / Not ready |
+| Check    | Display Name  | Method                                                 | Grace Period | Messages          |
+| -------- | ------------- | ------------------------------------------------------ | ------------ | ----------------- |
+| Backend  | Server        | HTTP check on `/api/block-headers/current` (port 3001) | 60s          | Ready / Not ready |
+| Frontend | Web interface | Port listening check (port 3000)                       | Default      | Ready / Not ready |
 
 ---
 
