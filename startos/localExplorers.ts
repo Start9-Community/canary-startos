@@ -13,6 +13,9 @@ type ExplorerInterface = {
   envVar: 'CANARY_MEMPOOL_URLS' | 'CANARY_BTC_RPC_EXPLORER_URLS'
 }
 
+// Adding an explorer is an entry here and nothing else: package id, host id,
+// interface id, and the env var Canary reads. Keep the browser-safety filter --
+// only addresses a browser can actually reach are handed over.
 const explorerInterfaces: ExplorerInterface[] = [
   {
     packageId: 'mempool',

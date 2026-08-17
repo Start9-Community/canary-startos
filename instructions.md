@@ -42,7 +42,7 @@ Canary can push transaction events to your phone via [ntfy.sh](https://ntfy.sh):
 If you'd rather keep notifications fully self-hosted, install Start9's **ntfy** package and wire Canary to it manually:
 
 1. On ntfy, run the **Provision Publisher** action with a publisher ID of `canary` and the topic you want Canary to use. ntfy returns a token — copy it.
-2. In Canary's settings, set the **ntfy server URL** to `http://ntfy.startos` (the in-cluster address — *not* your LAN or Tor URL; Canary publishes server-side, similar to the upstream Umbrel guidance) and add the publisher token as the authorization credential. Paste the same topic from step 1.
+2. In Canary's settings, set the **ntfy server URL** to `http://ntfy.startos` (the in-cluster address — _not_ your LAN or Tor URL; Canary publishes server-side, similar to the upstream Umbrel guidance) and add the publisher token as the authorization credential. Paste the same topic from step 1.
 3. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to the topic.
 
 ### Balance alerts
