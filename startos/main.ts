@@ -1,4 +1,5 @@
 import { storeJson } from './fileModels/store.json'
+import { getFrontendOriginEnv } from './frontendOrigins'
 import { i18n } from './i18n'
 import { getLocalExplorerEnv } from './localExplorers'
 import { sdk } from './sdk'
@@ -25,6 +26,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     throw new Error('Electrum server bridge address not yet available')
   }
   const mountpoint = '/app/data'
+  const frontendOriginEnv = await getFrontendOriginEnv(effects)
   const localExplorerEnv = await getLocalExplorerEnv(effects)
 
   /**
@@ -58,6 +60,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
           CANARY_SELF_HOSTED_ADMIN_PASSWORD: store.adminPassword,
           CANARY_SYNC_INTERVAL: '60',
           JWT_SECRET: store.jwtSecret,
+          ...frontendOriginEnv,
           ...localExplorerEnv,
         },
       },

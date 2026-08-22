@@ -99,11 +99,16 @@ Only addresses a browser can actually open are passed: the internal bridge and l
 
 One interface.
 
-| Interface | Id   | Type | Port | Description                 |
-| --------- | ---- | ---- | ---- | --------------------------- |
+| Interface | Id   | Type | Port | Description                        |
+| --------- | ---- | ---- | ---- | ---------------------------------- |
 | Web UI    | `ui` | ui   | 3000 | The web interface of Canary Wallet |
 
 Bound on the `ui-multi` MultiHost over HTTP and not masked. The back end listens on 3001 inside the service and is never exported.
+
+At startup, the package reads every enabled browser-reachable URL from this
+interface. It passes a preferred HTTPS `.local` URL as `FRONTEND_URL` and all
+enabled URLs as `FRONTEND_URLS`, so Canary Wallet's browser-origin checks keep
+working when the interface is opened through another enabled StartOS address.
 
 ## Installation and First-Run Flow
 
@@ -203,6 +208,8 @@ startos_managed_env_vars:
   - CANARY_SELF_HOSTED_ADMIN_PASSWORD
   - CANARY_SYNC_INTERVAL
   - JWT_SECRET
+  - FRONTEND_URL
+  - FRONTEND_URLS
   - CANARY_MEMPOOL_URLS # only when mempool is installed
   - CANARY_BTC_RPC_EXPLORER_URLS # only when bitcoin-explorer is installed
   - CANARY_TX_EXPLORER_PLATFORM # only when either is
