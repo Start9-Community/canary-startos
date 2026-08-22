@@ -28,6 +28,17 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const mountpoint = '/app/data'
   const frontendOriginEnv = await getFrontendOriginEnv(effects)
   const localExplorerEnv = await getLocalExplorerEnv(effects)
+  const backendSub = sdk.SubContainer.of(
+    effects,
+    { imageId: 'backend' },
+    sdk.Mounts.of().mountVolume({
+      volumeId: 'main',
+      subpath: null,
+      mountpoint,
+      readonly: false,
+    }),
+    'backend-sub',
+  )
 
   /**
    * ======================== Daemons ========================
@@ -37,18 +48,16 @@ export const main = sdk.setupMain(async ({ effects }) => {
    * Each daemon defines its own health check, which can optionally be exposed to the user.
    */
   return sdk.Daemons.of(effects)
+    .addOneshot('chown', {
+      subcontainer: backendSub,
+      exec: {
+        command: ['chown', '-R', 'canary:canary', mountpoint],
+        user: 'root',
+      },
+      requires: [],
+    })
     .addDaemon('server', {
-      subcontainer: sdk.SubContainer.of(
-        effects,
-        { imageId: 'backend' },
-        sdk.Mounts.of().mountVolume({
-          volumeId: 'main',
-          subpath: null,
-          mountpoint,
-          readonly: false,
-        }),
-        'backend-sub',
-      ),
+      subcontainer: backendSub,
       exec: {
         command: sdk.useEntrypoint(),
         env: {
@@ -77,7 +86,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
             },
           ),
       },
-      requires: [],
+      requires: ['chown'],
     })
     .addDaemon('web', {
       subcontainer: sdk.SubContainer.of(

@@ -52,7 +52,10 @@ The two share the service network namespace, so the front end reaches the server
 
 ## Volume and Data Layout
 
-One volume, mounted into the back end only.
+One volume, mounted into the back end only. Before the server starts, an
+idempotent root oneshot restores ownership of the mounted volume to the
+image's unprivileged `canary` user; StartOS presents service volumes as
+root-owned when they are mounted.
 
 | Volume | Mount Point | Purpose                                       |
 | ------ | ----------- | --------------------------------------------- |
