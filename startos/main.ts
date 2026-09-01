@@ -1,6 +1,8 @@
 import { storeJson } from './fileModels/store.json'
+import { getFrontendOriginEnv } from './frontendOrigins'
 import { i18n } from './i18n'
 import { getLocalExplorerEnv } from './localExplorers'
+import { getLocalNtfyEnv } from './localNtfy'
 import { sdk } from './sdk'
 import { getElectrumUrl, serverPort, uiPort } from './utils'
 
@@ -10,7 +12,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
    *
    * In this section, we fetch any resources or run any desired preliminary commands.
    */
-  console.info('Starting Canary!')
+  console.info('Starting Canary Wallet!')
 
   const store = await storeJson.read().const(effects)
   if (!store) {
@@ -25,7 +27,20 @@ export const main = sdk.setupMain(async ({ effects }) => {
     throw new Error('Electrum server bridge address not yet available')
   }
   const mountpoint = '/app/data'
+  const frontendOriginEnv = await getFrontendOriginEnv(effects)
   const localExplorerEnv = await getLocalExplorerEnv(effects)
+  const localNtfyEnv = await getLocalNtfyEnv(effects)
+  const backendSub = sdk.SubContainer.of(
+    effects,
+    { imageId: 'backend' },
+    sdk.Mounts.of().mountVolume({
+      volumeId: 'main',
+      subpath: null,
+      mountpoint,
+      readonly: false,
+    }),
+    'backend-sub',
+  )
 
   /**
    * ======================== Daemons ========================
@@ -35,18 +50,16 @@ export const main = sdk.setupMain(async ({ effects }) => {
    * Each daemon defines its own health check, which can optionally be exposed to the user.
    */
   return sdk.Daemons.of(effects)
+    .addOneshot('chown', {
+      subcontainer: backendSub,
+      exec: {
+        command: ['chown', '-R', 'canary:canary', mountpoint],
+        user: 'root',
+      },
+      requires: [],
+    })
     .addDaemon('server', {
-      subcontainer: sdk.SubContainer.of(
-        effects,
-        { imageId: 'backend' },
-        sdk.Mounts.of().mountVolume({
-          volumeId: 'main',
-          subpath: null,
-          mountpoint,
-          readonly: false,
-        }),
-        'backend-sub',
-      ),
+      subcontainer: backendSub,
       exec: {
         command: sdk.useEntrypoint(),
         env: {
@@ -58,7 +71,9 @@ export const main = sdk.setupMain(async ({ effects }) => {
           CANARY_SELF_HOSTED_ADMIN_PASSWORD: store.adminPassword,
           CANARY_SYNC_INTERVAL: '60',
           JWT_SECRET: store.jwtSecret,
+          ...frontendOriginEnv,
           ...localExplorerEnv,
+          ...localNtfyEnv,
         },
       },
       ready: {
@@ -74,7 +89,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
             },
           ),
       },
-      requires: [],
+      requires: ['chown'],
     })
     .addDaemon('web', {
       subcontainer: sdk.SubContainer.of(

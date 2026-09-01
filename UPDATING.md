@@ -1,10 +1,10 @@
 # Updating the upstream version
 
-Canary ships as two coordinated upstream Docker images (`canary-frontend` and `canary-backend`) pinned by `dockerTag` in `startos/manifest/index.ts`. Both share the same Canary version and must be bumped together.
+Canary Wallet ships as two coordinated upstream Docker images (`canary-frontend` and `canary-backend`) pinned by `dockerTag` in `startos/manifest/index.ts`. Both share the same Canary Wallet version and must be bumped together.
 
 ## Determining the upstream version
 
-- **Canary** ([schjonhaug/canary](https://github.com/schjonhaug/canary)) — latest GitHub release:
+- **Canary Wallet** ([schjonhaug/canary](https://github.com/schjonhaug/canary)) — latest GitHub release:
 
   ```
   gh release view -R schjonhaug/canary --json tagName -q .tagName

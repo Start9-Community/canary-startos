@@ -5,12 +5,13 @@ import {
   fulcrumDescription,
   long,
   mempoolDescription,
+  ntfyDescription,
   short,
 } from './i18n'
 
 export const manifest = setupManifest({
   id: 'canary',
-  title: 'Canary',
+  title: 'Canary Wallet',
   license: 'Elastic-2.0',
   packageRepo: 'https://github.com/Start9-Community/canary-startos',
   upstreamRepo: 'https://github.com/schjonhaug/canary/',
@@ -21,12 +22,12 @@ export const manifest = setupManifest({
   images: {
     frontend: {
       source: {
-        dockerTag: 'schjonhaug/canary-frontend:v1.5.2',
+        dockerTag: 'schjonhaug/canary-frontend:v1.6.0',
       },
     },
     backend: {
       source: {
-        dockerTag: 'schjonhaug/canary-backend:v1.5.2',
+        dockerTag: 'schjonhaug/canary-backend:v1.6.0',
       },
     },
   },
@@ -61,6 +62,14 @@ export const manifest = setupManifest({
       metadata: {
         title: 'Bitcoin Explorer',
         icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-explorer-startos/refs/heads/master/icon.svg',
+      },
+    },
+    ntfy: {
+      optional: true,
+      description: ntfyDescription,
+      metadata: {
+        title: 'ntfy',
+        icon: 'https://raw.githubusercontent.com/Start9Labs/ntfy-startos/refs/heads/master/icon.svg',
       },
     },
   },

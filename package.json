@@ -10,7 +10,8 @@
     "bitcoin-explorer-startos": "github:Start9-Community/bitcoin-explorer-startos#next",
     "electrs-startos": "github:Start9-Community/electrs-startos#next",
     "fulcrum-startos": "github:Start9Labs/fulcrum-startos#next",
-    "mempool-startos": "github:Start9Labs/mempool-startos#next"
+    "mempool-startos": "github:Start9Labs/mempool-startos#next",
+    "ntfy-startos": "github:Start9Labs/ntfy-startos#next"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

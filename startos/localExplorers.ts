@@ -1,9 +1,8 @@
-import { utils } from '@start9labs/start-sdk'
+import { T } from '@start9labs/start-sdk'
 import { uiHostId as btcExplorerHostId } from 'bitcoin-explorer-startos/startos/interfaces'
 import { mainHostId as mempoolHostId } from 'mempool-startos/startos/utils'
+import { interfaceUrls } from './interfaceUrls'
 import { sdk } from './sdk'
-
-type Effects = Parameters<Parameters<typeof sdk.setupMain>[0]>[0]['effects']
 
 type ExplorerInterface = {
   packageId: 'mempool' | 'bitcoin-explorer'
@@ -31,38 +30,8 @@ const explorerInterfaces: ExplorerInterface[] = [
   },
 ]
 
-function isBrowserSafeUrl(url: string): boolean {
-  try {
-    const parsed = new URL(url)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
-
-function uniqueUrls(urls: string[]): string[] {
-  return [...new Set(urls.filter(isBrowserSafeUrl))]
-}
-
-// The interface's browser-navigable URLs (LAN / Tor / clearnet), excluding the
-// LXC bridge and loopback which the user's browser can't reach.
-function interfaceUrls(
-  host: utils.FilledHost | null,
-  interfaceId: string,
-): string[] {
-  const iface =
-    host &&
-    Object.values(host.bindings)
-      .flatMap((b) => Object.values(b.interfaces))
-      .find((i) => i.id === interfaceId)
-  if (!iface) {
-    return []
-  }
-  return uniqueUrls(iface.addressInfo.nonLocal.format('urlstring'))
-}
-
 async function getExplorerUrls(
-  effects: Effects,
+  effects: T.Effects,
   { packageId, hostId, interfaceId }: ExplorerInterface,
 ): Promise<string[]> {
   return sdk.host
@@ -74,7 +43,7 @@ async function getExplorerUrls(
 }
 
 export async function getLocalExplorerEnv(
-  effects: Effects,
+  effects: T.Effects,
 ): Promise<Record<string, string>> {
   const env: Record<string, string> = {}
 

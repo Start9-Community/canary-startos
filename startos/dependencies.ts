@@ -28,7 +28,9 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
     }
   } else {
     await sdk.action.createOwnTask(effects, selectElectrum, 'critical', {
-      reason: i18n('Canary requires an Electrum server to look up addresses'),
+      reason: i18n(
+        'Canary Wallet requires an Electrum server to look up addresses',
+      ),
     })
     return {}
   }

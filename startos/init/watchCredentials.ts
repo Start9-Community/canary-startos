@@ -8,7 +8,7 @@ export const watchCredentials = sdk.setupOnInit(async (effects) => {
 
   if (!store?.adminPassword) {
     await sdk.action.createOwnTask(effects, setAdminPassword, 'critical', {
-      reason: i18n('Set the admin password before signing in to Canary'),
+      reason: i18n('Set the admin password before signing in to Canary Wallet'),
     })
   }
 })
