@@ -2,6 +2,7 @@ import { storeJson } from './fileModels/store.json'
 import { getFrontendOriginEnv } from './frontendOrigins'
 import { i18n } from './i18n'
 import { getLocalExplorerEnv } from './localExplorers'
+import { getLocalNtfyEnv } from './localNtfy'
 import { sdk } from './sdk'
 import { getElectrumUrl, serverPort, uiPort } from './utils'
 
@@ -28,6 +29,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const mountpoint = '/app/data'
   const frontendOriginEnv = await getFrontendOriginEnv(effects)
   const localExplorerEnv = await getLocalExplorerEnv(effects)
+  const localNtfyEnv = await getLocalNtfyEnv(effects)
   const backendSub = sdk.SubContainer.of(
     effects,
     { imageId: 'backend' },
@@ -71,6 +73,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
           JWT_SECRET: store.jwtSecret,
           ...frontendOriginEnv,
           ...localExplorerEnv,
+          ...localNtfyEnv,
         },
       },
       ready: {

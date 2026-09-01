@@ -29,21 +29,31 @@
 
 Canary Wallet is watch-only — it only consumes public keys, never holds them, and cannot spend.
 
-### Push notifications
+### Notifications
 
-Canary Wallet can push transaction events to your phone via [ntfy.sh](https://ntfy.sh):
+Each wallet contact can use one or more notification methods:
+
+- **ntfy** sends push notifications through [ntfy.sh](https://ntfy.sh) or a self-hosted ntfy server.
+- **Nostr DM** sends encrypted direct messages to an npub or hex public key. Canary Wallet supports modern NIP-17 and legacy NIP-04 delivery modes.
+- **JSON webhook** sends structured self-hosted events to an HTTP or HTTPS endpoint reachable from the Canary Wallet backend. Use the contact editor's test button before saving.
+
+For every contact, choose which transaction stages and special events to send: incoming or outgoing pending transactions, confirmations, RBF replacements, and CPFP relationships. Content controls are also per notification method, so you decide whether a message may disclose the wallet name, event type, transaction amount or balance, and balance-alert condition, threshold, or current balance.
+
+To use public ntfy push notifications:
 
 1. Install the ntfy app ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347)) and subscribe to a topic of your choice.
-2. In Canary Wallet, add a contact and paste the same ntfy topic.
-3. Incoming and outgoing transactions, confirmations, RBF and CPFP detection, and balance-alert crossings all land as push notifications.
+2. In Canary Wallet, add a contact, enable **ntfy**, and paste the same topic.
+3. Use the inline test before saving the contact.
 
 #### Using the StartOS ntfy service (optional)
 
 If you'd rather keep notifications fully self-hosted, install Start9's **ntfy** package and wire Canary Wallet to it manually:
 
 1. On ntfy, run the **Provision Publisher** action with a publisher ID of `canary` and the topic you want Canary Wallet to use. ntfy returns a token — copy it.
-2. In Canary Wallet's settings, set the **ntfy server URL** to `http://ntfy.startos` (the in-cluster address — _not_ your LAN or Tor URL; Canary Wallet publishes server-side, similar to the upstream Umbrel guidance) and add the publisher token as the authorization credential. Paste the same topic from step 1.
+2. In Canary Wallet's settings, set the **ntfy server URL** to `http://ntfy.startos` (the legacy in-cluster address used by Canary Wallet v1.5.2 — _not_ your LAN or Tor URL) and add the publisher token as the authorization credential. Paste the same topic from step 1. The StartOS package detects an installed ntfy service and trusts this exact private URL so existing v1.5.2 contacts continue working after upgrade; arbitrary private notification URLs remain blocked.
 3. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to the topic.
+
+For a JSON webhook, enter the receiver's complete URL in the contact editor. The request originates from Canary Wallet's backend container, not your browser, so `localhost` refers to Canary Wallet itself. Treat URL paths and query strings as secrets even though collapsed contact summaries show only the origin.
 
 ### Balance alerts
 

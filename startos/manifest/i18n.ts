@@ -75,6 +75,19 @@ export const fulcrumDescription = {
 
 export const electrsDescription = fulcrumDescription
 
+export const ntfyDescription = {
+  en_US:
+    'Used for sending Canary Wallet notifications through a local ntfy server',
+  es_ES:
+    'Se utiliza para enviar notificaciones de Canary Wallet a través de un servidor ntfy local',
+  de_DE:
+    'Wird zum Senden von Canary-Wallet-Benachrichtigungen über einen lokalen ntfy-Server verwendet',
+  pl_PL:
+    'Używany do wysyłania powiadomień Canary Wallet przez lokalny serwer ntfy',
+  fr_FR:
+    'Utilisé pour envoyer les notifications de Canary Wallet via un serveur ntfy local',
+}
+
 export const mempoolDescription = {
   en_US: 'Used for opening Canary Wallet transaction links in local Mempool',
   es_ES:

@@ -1,9 +1,8 @@
+import { T } from '@start9labs/start-sdk'
 import { uiHostId as btcExplorerHostId } from 'bitcoin-explorer-startos/startos/interfaces'
 import { mainHostId as mempoolHostId } from 'mempool-startos/startos/utils'
 import { interfaceUrls } from './interfaceUrls'
 import { sdk } from './sdk'
-
-type Effects = Parameters<Parameters<typeof sdk.setupMain>[0]>[0]['effects']
 
 type ExplorerInterface = {
   packageId: 'mempool' | 'bitcoin-explorer'
@@ -32,7 +31,7 @@ const explorerInterfaces: ExplorerInterface[] = [
 ]
 
 async function getExplorerUrls(
-  effects: Effects,
+  effects: T.Effects,
   { packageId, hostId, interfaceId }: ExplorerInterface,
 ): Promise<string[]> {
   return sdk.host
@@ -44,7 +43,7 @@ async function getExplorerUrls(
 }
 
 export async function getLocalExplorerEnv(
-  effects: Effects,
+  effects: T.Effects,
 ): Promise<Record<string, string>> {
   const env: Record<string, string> = {}
 

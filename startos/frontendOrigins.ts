@@ -1,8 +1,7 @@
+import { T } from '@start9labs/start-sdk'
 import { interfaceUrls } from './interfaceUrls'
 import { uiHostId, uiInterfaceId } from './interfaces'
 import { sdk } from './sdk'
-
-type Effects = Parameters<Parameters<typeof sdk.setupMain>[0]>[0]['effects']
 
 function isPreferredLanOrigin(url: string): boolean {
   const parsed = new URL(url)
@@ -19,7 +18,7 @@ function selectCanonicalUrl(urls: string[]): string | null {
 }
 
 export async function getFrontendOriginEnv(
-  effects: Effects,
+  effects: T.Effects,
 ): Promise<Record<'FRONTEND_URL' | 'FRONTEND_URLS', string>> {
   const urls = await sdk.host
     .getOwn(effects, uiHostId, (host) => interfaceUrls(host, uiInterfaceId))

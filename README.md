@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="Canary Wallet Logo" width="21%">
+  <img src="icon.svg" alt="Canary Wallet Logo" width="21%">
 </p>
 
 # Canary Wallet on StartOS
@@ -81,7 +81,7 @@ Canary Wallet's own settings are its business and live in the same volume; the p
 
 ## Dependencies
 
-**Four are declared optional, and exactly one of them is actually required** — which one depends on your choice.
+**Five are declared optional, and exactly one of them is actually required** — which one depends on your choice.
 
 | Dependency       | Role                                                              |
 | ---------------- | ----------------------------------------------------------------- |
@@ -89,6 +89,7 @@ Canary Wallet's own settings are its business and live in the same volume; the p
 | Electrs          | Required, `kind: 'running'`, when selected as the Electrum server |
 | Mempool          | Never required — used only for explorer links, if installed       |
 | Bitcoin Explorer | Never required — used only for explorer links, if installed       |
+| ntfy             | Never required — enables the trusted local ntfy compatibility URL |
 
 **Canary Wallet cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, the package declares no dependency at all and raises a task instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not.
 
@@ -97,6 +98,8 @@ The selected server's address is resolved over the internal bridge, pinned to th
 **Mempool and Bitcoin Explorer are a different kind of optional.** They are never depended on; the package simply looks for them and, if present, hands Canary Wallet their browser-reachable addresses so transaction links point at your own explorer instead of a public one. Nothing breaks when they are absent — the links just go elsewhere.
 
 Only addresses a browser can actually open are passed: the internal bridge and loopback are filtered out, and anything that is not HTTP or HTTPS is dropped.
+
+**ntfy is optional and compatibility-scoped.** When its UI host exists, the package passes `CANARY_NTFY_SERVER_URL=http://ntfy.startos`. This exact value allows Canary Wallet v1.6.0 to trust the private URL documented by the v1.5.2 package, preserving saved contacts through an upgrade. The package does not provision or replace a token or topic; those remain in Canary Wallet's settings. Removing ntfy removes the environment variable on the next reactive restart.
 
 ## Network Access and Interfaces
 
@@ -112,6 +115,8 @@ At startup, the package reads every enabled browser-reachable URL from this
 interface. It passes a preferred HTTPS `.local` URL as `FRONTEND_URL` and all
 enabled URLs as `FRONTEND_URLS`, so Canary Wallet's browser-origin checks keep
 working when the interface is opened through another enabled StartOS address.
+
+Canary Wallet supports ntfy, encrypted Nostr DMs, and JSON webhooks. Notification events and disclosed content are selected per contact and per method in Canary Wallet; the StartOS wrapper only detects the optional local ntfy service described above.
 
 ## Installation and First-Run Flow
 
@@ -186,6 +191,7 @@ A restored instance comes back configured and raises no tasks. It does still nee
 4. **Explorer links depend on what is installed.** With neither Mempool nor Bitcoin Explorer present, links fall back to whatever upstream defaults to.
 5. **Only browser-reachable explorer addresses are used** — internal ones are filtered out, so an explorer reachable only on the bridge contributes nothing.
 6. **The sync interval is fixed** and not exposed as a setting.
+7. **Local ntfy uses the legacy v1.5.2 service URL for upgrade compatibility.** Token and topic provisioning remain manual; arbitrary private ntfy or webhook URLs are not trusted by the wrapper.
 
 ---
 
@@ -216,12 +222,14 @@ startos_managed_env_vars:
   - CANARY_MEMPOOL_URLS # only when mempool is installed
   - CANARY_BTC_RPC_EXPLORER_URLS # only when bitcoin-explorer is installed
   - CANARY_TX_EXPLORER_PLATFORM # only when either is
+  - CANARY_NTFY_SERVER_URL # http://ntfy.startos, only when ntfy is installed
   - API_URL # front end only
 dependencies:
   - fulcrum # required only when selected; kind: running
   - electrs # required only when selected; kind: running
   - mempool # never required; explorer links only
   - bitcoin-explorer # never required; explorer links only
+  - ntfy # never required; local notification compatibility only
 interfaces:
   ui: { type: ui, port: 3000 } # the server on 3001 is internal only
 actions:
