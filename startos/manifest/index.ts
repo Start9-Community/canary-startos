@@ -22,12 +22,12 @@ export const manifest = setupManifest({
   images: {
     frontend: {
       source: {
-        dockerTag: 'schjonhaug/canary-frontend:v1.6.0',
+        dockerTag: 'schjonhaug/canary-frontend:v1.6.2',
       },
     },
     backend: {
       source: {
-        dockerTag: 'schjonhaug/canary-backend:v1.6.0',
+        dockerTag: 'schjonhaug/canary-backend:v1.6.2',
       },
     },
   },
