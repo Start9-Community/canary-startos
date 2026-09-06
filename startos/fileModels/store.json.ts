@@ -10,6 +10,16 @@ const shape = z.object({
   jwtSecret: z
     .string()
     .catch(utils.getDefaultString({ charset: 'a-z,A-Z,0-9', len: 64 })),
+  // Cached ntfy Provision Publisher output. The action mints a new token on
+  // every run, so this must survive restarts. Cleared when ntfy is removed.
+  ntfy: z
+    .object({
+      publishUrl: z.string(),
+      token: z.string(),
+      topic: z.string(),
+    })
+    .optional()
+    .catch(undefined),
 })
 
 export const storeJson = FileHelper.json(

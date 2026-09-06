@@ -1,10 +1,12 @@
 import { selectElectrum } from './actions/selectElectrum'
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
+import { ntfyDependency } from './localNtfy'
 import { sdk } from './sdk'
 
 export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   const electrum = await storeJson.read((s) => s.electrum).const(effects)
+  const ntfy = await ntfyDependency(effects)
 
   if (electrum === 'fulcrum') {
     return {
@@ -13,6 +15,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
         versionRange: '>=2.1.1:8',
         healthChecks: ['primary', 'sync-progress'],
       },
+      ...ntfy,
     }
   } else if (electrum === 'electrs') {
     return {
@@ -25,6 +28,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
         versionRange: '>=0.11.1:14',
         healthChecks: ['electrs', 'sync'],
       },
+      ...ntfy,
     }
   } else {
     await sdk.action.createOwnTask(effects, selectElectrum, 'critical', {
@@ -32,6 +36,6 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
         'Canary Wallet requires an Electrum server to look up addresses',
       ),
     })
-    return {}
+    return { ...ntfy }
   }
 })

@@ -1,13 +1,13 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.6.2:0',
+  version: '1.6.2:1',
   releaseNotes: {
-    en_US: `Fixed self-hosted sign-in failures when a node changes its hostname, protocol, or external port, including dynamic StartOS ports. Login errors now provide clearer guidance, while existing passwords, wallets, contacts, and notification settings remain unchanged.`,
-    es_ES: `Se corrigieron los fallos de inicio de sesión en instalaciones autoalojadas cuando cambia el nombre de host, el protocolo o el puerto externo, incluidos los puertos dinámicos de StartOS. Los errores de inicio de sesión ofrecen ahora indicaciones más claras, y las contraseñas, carteras, contactos y ajustes de notificaciones existentes no se modifican.`,
-    de_DE: `Behoben wurden Fehler bei der Anmeldung in selbst gehosteten Installationen, wenn sich Hostname, Protokoll oder externer Port ändern, einschließlich dynamischer StartOS-Ports. Anmeldefehler enthalten jetzt klarere Hinweise; vorhandene Passwörter, Wallets, Kontakte und Benachrichtigungseinstellungen bleiben unverändert.`,
-    pl_PL: `Naprawiono problemy z logowaniem w instalacjach samodzielnie hostowanych, gdy zmienia się nazwa hosta, protokół lub port zewnętrzny, w tym dynamiczne porty StartOS. Komunikaty błędów logowania zawierają teraz jaśniejsze wskazówki, a istniejące hasła, portfele, kontakty i ustawienia powiadomień pozostają bez zmian.`,
-    fr_FR: `Correction des échecs de connexion sur les installations auto-hébergées lorsque le nom d’hôte, le protocole ou le port externe change, y compris les ports StartOS dynamiques. Les erreurs de connexion fournissent désormais des indications plus claires, tandis que les mots de passe, portefeuilles, contacts et paramètres de notification existants restent inchangés.`,
+    en_US: `When ntfy is installed, Canary Wallet now provisions a local publisher automatically and uses it as the default notification server. Settings you have already saved in Canary Wallet are unchanged. Subscribe your phone to the same topic on ntfy's public address.`,
+    es_ES: `Cuando ntfy está instalado, Canary Wallet ahora aprovisiona automáticamente un publicador local y lo usa como servidor de notificaciones predeterminado. Los ajustes que ya hayas guardado en Canary Wallet no cambian. Suscribe tu teléfono al mismo tema en la dirección pública de ntfy.`,
+    de_DE: `Ist ntfy installiert, richtet Canary Wallet jetzt automatisch einen lokalen Publisher ein und verwendet ihn als Standard-Benachrichtigungsserver. Bereits in Canary Wallet gespeicherte Einstellungen bleiben unverändert. Abonniere dasselbe Thema auf der öffentlichen ntfy-Adresse mit deinem Telefon.`,
+    pl_PL: `Gdy ntfy jest zainstalowany, Canary Wallet automatycznie tworzy lokalnego wydawcę i używa go jako domyślnego serwera powiadomień. Ustawienia już zapisane w Canary Wallet pozostają bez zmian. Subskrybuj ten sam temat na publicznym adresie ntfy w telefonie.`,
+    fr_FR: `Lorsque ntfy est installé, Canary Wallet provisionne désormais automatiquement un éditeur local et l’utilise comme serveur de notifications par défaut. Les réglages déjà enregistrés dans Canary Wallet restent inchangés. Abonnez votre téléphone au même sujet sur l’adresse publique de ntfy.`,
   },
   migrations: {},
 })
