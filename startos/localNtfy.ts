@@ -116,15 +116,35 @@ function parseProvisioningResult(
 async function provisionNtfy(
   effects: T.Effects,
 ): Promise<NtfyProvisioning | null> {
+  // ntfy's withInput actions store the spec under the execute event id.
+  // Host effect RPCs mint a fresh procedureId per call unless we send the
+  // one getInput returned. The UI threads this as eventId; the effect
+  // param is procedureId (omitted from the generated TS types).
+  const prev = await effects.action
+    .getInput({
+      packageId: 'ntfy',
+      actionId: 'provision-publisher',
+    })
+    .catch((error) => {
+      console.warn('Failed to load ntfy Provision Publisher input', error)
+      return null
+    })
+
+  if (!prev?.eventId) {
+    console.warn('ntfy Provision Publisher did not return an event id')
+    return null
+  }
+
   const result = await effects.action
     .run({
       packageId: 'ntfy',
       actionId: 'provision-publisher',
+      procedureId: prev.eventId,
       input: {
         packageId: ntfyPublisherId,
         topic: ntfyTopic,
       },
-    })
+    } as Parameters<T.Effects['action']['run']>[0])
     .catch((error) => {
       console.warn('Failed to provision local ntfy publisher', error)
       return null
