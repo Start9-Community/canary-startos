@@ -10,6 +10,15 @@ const shape = z.object({
   jwtSecret: z
     .string()
     .catch(utils.getDefaultString({ charset: 'a-z,A-Z,0-9', len: 64 })),
+  // Keep minted credentials across restarts; clear on restore or ntfy removal.
+  ntfy: z
+    .object({
+      publishUrl: z.string(),
+      token: z.string(),
+      topic: z.string(),
+    })
+    .optional()
+    .catch(undefined),
 })
 
 export const storeJson = FileHelper.json(

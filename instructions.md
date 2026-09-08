@@ -47,11 +47,18 @@ To use public ntfy push notifications:
 
 #### Using the StartOS ntfy service (optional)
 
-If you'd rather keep notifications fully self-hosted, install Start9's **ntfy** package and wire Canary Wallet to it manually:
+Install Start9's **ntfy** package, version **2.26.3:0 or newer**, either before or after Canary Wallet. When ntfy is installed and running, Canary Wallet provisions a local publisher for you and uses it as the default ntfy server. Settings you have already saved in Canary Wallet are not overwritten, and wallet contacts are still created by you.
 
-1. On ntfy, run the **Provision Publisher** action with a publisher ID of `canary` and the topic you want Canary Wallet to use. ntfy returns a token — copy it.
-2. In Canary Wallet's settings, set the **ntfy server URL** to `http://ntfy.startos` (the legacy in-cluster address used by Canary Wallet v1.5.2 — _not_ your LAN or Tor URL) and add the publisher token as the authorization credential. Paste the same topic from step 1. The StartOS package detects an installed ntfy service and trusts this exact private URL so existing v1.5.2 contacts continue working after upgrade; arbitrary private notification URLs remain blocked.
-3. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to the topic.
+1. Install **ntfy** and let it finish starting. Canary Wallet detects ntfy automatically, including when installed later.
+2. In Canary Wallet's settings, choose the local **ntfy** server if it is not already selected. The default topic is `canary`.
+3. In ntfy, run **Create User**, then **Grant User Topic Access** to give that user **read-only** access to `canary` (or your chosen topic).
+4. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to that topic with a user that has read access.
+
+Use the contact editor's test button before saving. Canary Wallet does not create wallet contacts automatically.
+
+If you previously pasted `http://ntfy.startos` as a custom URL, switch to the listed local ntfy option so Canary Wallet uses the provisioned publisher.
+
+You can still provision by hand if you prefer: on ntfy, run **Provision Publisher** with publisher ID `canary` and the topic you want, then paste the returned URL, token, and topic into Canary Wallet's settings.
 
 For a JSON webhook, enter the receiver's complete URL in the contact editor. The request originates from Canary Wallet's backend container, not your browser, so `localhost` refers to Canary Wallet itself. Treat URL paths and query strings as secrets even though collapsed contact summaries show only the origin.
 

@@ -28,5 +28,7 @@ verified, tried, and decided belongs in the commit message and the PR body.
 
 - **Import each Electrum server's host id and port from its own package** (`electrs-startos/startos/utils`, `fulcrum-startos/startos/utils`) rather than hardcoding — a change on their side then breaks the build here instead of silently misconnecting.
 - **`electrs`'s version floor is load-bearing, not hygiene.** Earlier revisions fetch blocks on bitcoind's unprivileged p2p listener, where Canary's address-history queries get the connection dropped — and electrs exits rather than reconnecting, landing in a restart loop under exactly this workload. Don't lower it.
-- **The Electrum dependency is declared from the store, so the "no selection" branch must keep raising its task.** With nothing selected the package declares no dependency at all and `main` throws; the task is what gets the user out of that state.
+- **The Electrum dependency is declared from the store, so the "no selection" branch must keep raising its task.** With nothing selected the package declares no Electrum dependency and `main` throws; the task is what gets the user out of that state. An installed ntfy service is declared independently.
 - **Explorer lookups are `.catch(() => [])` on purpose.** These are not dependencies; an uninstalled explorer must degrade to "no links", never to a failed start.
+- **ntfy must be in `current_dependencies` before calling Provision Publisher.** The action is `access: 'dependent'`; detecting the host with `sdk.host.get` is not enough.
+- **Cache the ntfy publisher token in `store.json`.** Provision Publisher mints a new token on every run. Write it from init (`watchLocalNtfy`), never from `setupMain` after a `.const()` read of the store.

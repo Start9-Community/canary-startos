@@ -1,13 +1,13 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.6.2:0',
+  version: '1.6.3:0',
   releaseNotes: {
-    en_US: `Fixed self-hosted sign-in failures when a node changes its hostname, protocol, or external port, including dynamic StartOS ports. Login errors now provide clearer guidance, while existing passwords, wallets, contacts, and notification settings remain unchanged.`,
-    es_ES: `Se corrigieron los fallos de inicio de sesión en instalaciones autoalojadas cuando cambia el nombre de host, el protocolo o el puerto externo, incluidos los puertos dinámicos de StartOS. Los errores de inicio de sesión ofrecen ahora indicaciones más claras, y las contraseñas, carteras, contactos y ajustes de notificaciones existentes no se modifican.`,
-    de_DE: `Behoben wurden Fehler bei der Anmeldung in selbst gehosteten Installationen, wenn sich Hostname, Protokoll oder externer Port ändern, einschließlich dynamischer StartOS-Ports. Anmeldefehler enthalten jetzt klarere Hinweise; vorhandene Passwörter, Wallets, Kontakte und Benachrichtigungseinstellungen bleiben unverändert.`,
-    pl_PL: `Naprawiono problemy z logowaniem w instalacjach samodzielnie hostowanych, gdy zmienia się nazwa hosta, protokół lub port zewnętrzny, w tym dynamiczne porty StartOS. Komunikaty błędów logowania zawierają teraz jaśniejsze wskazówki, a istniejące hasła, portfele, kontakty i ustawienia powiadomień pozostają bez zmian.`,
-    fr_FR: `Correction des échecs de connexion sur les installations auto-hébergées lorsque le nom d’hôte, le protocole ou le port externe change, y compris les ports StartOS dynamiques. Les erreurs de connexion fournissent désormais des indications plus claires, tandis que les mots de passe, portefeuilles, contacts et paramètres de notification existants restent inchangés.`,
+    en_US: `Automatically configures a local ntfy publisher when ntfy is installed on StartOS, while preserving saved settings. Also improves Sparrow imports, Nostr notifications, Electrum recovery, local webhooks, and dark-mode display.`,
+    es_ES: `Configura automáticamente un emisor local de ntfy cuando ntfy está instalado en StartOS, conservando los ajustes guardados. También mejora las importaciones de Sparrow, las notificaciones de Nostr, la recuperación de Electrum, los webhooks locales y la visualización en modo oscuro.`,
+    de_DE: `Richtet automatisch einen lokalen ntfy-Publisher ein, wenn ntfy auf StartOS installiert ist, und behält gespeicherte Einstellungen bei. Verbessert außerdem Sparrow-Importe, Nostr-Benachrichtigungen, die Wiederherstellung von Electrum-Verbindungen, lokale Webhooks und die Darstellung im Dunkelmodus.`,
+    pl_PL: `Automatycznie konfiguruje lokalnego nadawcę ntfy, gdy ntfy jest zainstalowane w StartOS, zachowując zapisane ustawienia. Usprawnia także import ze Sparrow, powiadomienia Nostr, przywracanie połączeń Electrum, lokalne webhooki i wygląd w trybie ciemnym.`,
+    fr_FR: `Configure automatiquement un émetteur ntfy local lorsque ntfy est installé sur StartOS, tout en conservant les paramètres enregistrés. Améliore également les imports Sparrow, les notifications Nostr, la récupération des connexions Electrum, les webhooks locaux et l’affichage en mode sombre.`,
   },
   migrations: {},
 })

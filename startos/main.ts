@@ -29,7 +29,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const mountpoint = '/app/data'
   const frontendOriginEnv = await getFrontendOriginEnv(effects)
   const localExplorerEnv = await getLocalExplorerEnv(effects)
-  const localNtfyEnv = await getLocalNtfyEnv(effects)
+  const localNtfyEnv = await getLocalNtfyEnv(effects, store.ntfy)
   const backendSub = sdk.SubContainer.of(
     effects,
     { imageId: 'backend' },
