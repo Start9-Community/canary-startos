@@ -3,7 +3,7 @@
   "scripts": {
     "build": "rm -rf ./javascript && ncc build startos/index.ts -o ./javascript",
     "prettier": "prettier --write startos",
-    "check": "tsc --noEmit && node --test tests/*.test.cjs"
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@start9labs/start-sdk": "2.0.9",

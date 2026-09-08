@@ -47,7 +47,7 @@ To use public ntfy push notifications:
 
 #### Using the StartOS ntfy service (optional)
 
-Install Start9's **ntfy** package, version **2.26.3:0 or newer**, either before or after Canary Wallet. When ntfy is installed and running, Canary Wallet provisions a local publisher for you and uses it as the default ntfy server. Settings you have already saved in Canary Wallet are not overwritten, and wallet contacts are still created by you.
+Install Start9's **ntfy** package either before or after Canary Wallet. When ntfy is installed and running, Canary Wallet provisions a local publisher for you and uses it as the default ntfy server. Settings you have already saved in Canary Wallet are not overwritten, and wallet contacts are still created by you.
 
 1. Install **ntfy** and let it finish starting. Canary Wallet detects ntfy automatically, including when installed later.
 2. In Canary Wallet's settings, choose the local **ntfy** server if it is not already selected. The default topic is `canary`.

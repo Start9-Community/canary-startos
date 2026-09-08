@@ -90,7 +90,7 @@ Canary Wallet's own settings are its business and live in the same volume; the p
 | Electrs          | Required, `kind: 'running'`, when selected as the Electrum server |
 | Mempool          | Never required — used only for explorer links, if installed       |
 | Bitcoin Explorer | Never required — used only for explorer links, if installed       |
-| ntfy             | `kind: 'exists'`, version `>=2.26.3:0`, while installed  |
+| ntfy             | Declared `kind: 'exists'`, only while ntfy itself is installed    |
 
 **Canary Wallet cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, the package declares no Electrum dependency and raises a task instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not. An installed ntfy service is declared independently of that choice.
 
@@ -100,7 +100,7 @@ The selected server's address is resolved over the internal bridge, pinned to th
 
 Only addresses a browser can actually open are passed: the internal bridge and loopback are filtered out, and anything that is not HTTP or HTTPS is dropped.
 
-**ntfy is optional until it is installed.** Detection via the UI host is not enough to call Provision Publisher: that action is `access: 'dependent'`, so the package adds ntfy to `current_dependencies` whenever the host exists, and drops it again when ntfy is removed. The declaration requires ntfy 2.26.3:0 or newer, which supports dependent actions and bridge publish URLs. It does not require ntfy to remain running or healthy. Dependency registration and publisher provisioning share one reactive handler, so registration completes before provisioning even when ntfy is installed later.
+**ntfy is optional until it is installed.** Detection via the UI host is not enough to call Provision Publisher: that action is `access: 'dependent'`, so the package adds ntfy to `current_dependencies` whenever the host exists, and drops it again when ntfy is removed. The declared floor is the first ntfy release whose Provision Publisher accepts dependent callers and returns a bridge publish URL. It does not require ntfy to remain running or healthy. Dependency registration and publisher provisioning share one reactive handler, so registration completes before provisioning even when ntfy is installed later.
 
 When ntfy is running, init calls Provision Publisher with publisher id `canary` and topic `canary`, caches the returned token, and `setupMain` passes `CANARY_NTFY_SERVER_URL`, `CANARY_NTFY_TOKEN`, and `CANARY_NTFY_TOPIC`. Those are defaults: settings saved in Canary Wallet stay authoritative, the wrapper exports the managed token for the application to use with the detected local integration, and wallet contacts are not created automatically. The publish URL is ntfy's live internal bridge address, not the retired `ntfy.startos` hostname. Removing ntfy clears the cache and the environment variables on the next reactive restart.
 
@@ -234,7 +234,7 @@ dependencies:
   - electrs # required only when selected; kind: running
   - mempool # never required; explorer links only
   - bitcoin-explorer # never required; explorer links only
-  - ntfy # required only while ntfy is installed; kind: exists; minimum 2.26.3:0
+  - ntfy # required only while ntfy is installed; kind: exists
 interfaces:
   ui: { type: ui, port: 3000 } # the server on 3001 is internal only
 actions:
