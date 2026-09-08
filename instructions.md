@@ -47,11 +47,12 @@ To use public ntfy push notifications:
 
 #### Using the StartOS ntfy service (optional)
 
-Install Start9's **ntfy** package either before or after Canary Wallet. When ntfy is installed and running, Canary Wallet provisions a local publisher for you and uses it as the default ntfy server. Settings you have already saved in Canary Wallet are not overwritten, and wallet contacts are still created by you.
+Install Start9's **ntfy** package, version **2.26.3:0 or newer**, either before or after Canary Wallet. When ntfy is installed and running, Canary Wallet provisions a local publisher for you and uses it as the default ntfy server. Settings you have already saved in Canary Wallet are not overwritten, and wallet contacts are still created by you.
 
-1. Install **ntfy** and let it finish starting. Restarting Canary Wallet after ntfy is running is enough if Canary Wallet was installed first.
+1. Install **ntfy** and let it finish starting. Canary Wallet detects ntfy automatically, including when installed later.
 2. In Canary Wallet's settings, choose the local **ntfy** server if it is not already selected. The default topic is `canary`.
-3. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to that topic with a user that has read access.
+3. In ntfy, run **Create User**, then **Grant User Topic Access** to give that user **read-only** access to `canary` (or your chosen topic).
+4. On your phone, point the ntfy app at your StartOS ntfy package's **public** address (LAN or Tor, the same one you'd open in a browser) and subscribe to that topic with a user that has read access.
 
 Use the contact editor's test button before saving. Canary Wallet does not create wallet contacts automatically.
 

@@ -4,7 +4,7 @@ import { setInterfaces } from '../interfaces'
 import { versionGraph } from '../versions'
 import { actions } from '../actions'
 import { restoreInit } from '../backups'
-import { watchLocalNtfy } from '../localNtfy'
+import { clearRestoredNtfy, watchLocalNtfy } from '../localNtfy'
 import { seedFiles } from './seedFiles'
 import { watchCredentials } from './watchCredentials'
 
@@ -13,10 +13,14 @@ export const init = sdk.setupInit(
   versionGraph,
   seedFiles,
   setInterfaces,
-  setDependencies,
+  clearRestoredNtfy,
   actions,
   watchCredentials,
-  watchLocalNtfy,
+  // Share constRetry so dependency registration precedes every provisioning pass.
+  async (effects, kind) => {
+    await setDependencies(effects)
+    await watchLocalNtfy.init(effects, kind)
+  },
 )
 
 export const uninit = sdk.setupUninit(versionGraph)

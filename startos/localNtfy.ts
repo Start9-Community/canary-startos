@@ -16,18 +16,11 @@ export type NtfyProvisioning = {
 }
 
 const ntfyCurrentDependency = {
-  kind: 'running' as const,
-  // Provision Publisher is `access: 'dependent'` and returns a bridge
-  // publish URL. Older ntfy revisions either reject the cross-package run
-  // or still advertise the retired `ntfy.startos` hostname.
-  versionRange: '>=2.0.0:0',
-  healthChecks: ['primary'],
+  kind: 'exists' as const,
+  // First revision with dependent actions and bridge publish URLs.
+  versionRange: '>=2.26.3:0',
 }
 
-/**
- * Presence only — not LAN/Tor churn. ntfy must be in current_dependencies
- * before Provision Publisher will accept a dependent `action.run`.
- */
 export async function isNtfyInstalled(effects: T.Effects): Promise<boolean> {
   return sdk.host
     .get(
@@ -64,31 +57,6 @@ async function getNtfyPublishUrl(effects: T.Effects): Promise<string | null> {
     .const()
 }
 
-type ActionResultMember = {
-  name: string
-  type: 'single' | 'group'
-  value?: string | ActionResultMember[]
-}
-
-function findResultValue(
-  members: ActionResultMember[],
-  name: keyof NtfyProvisioning,
-): string | null {
-  for (const member of members) {
-    if (member.type === 'single' && member.name === name) {
-      return typeof member.value === 'string' ? member.value : null
-    }
-    if (member.type === 'group' && Array.isArray(member.value)) {
-      const nestedValue = findResultValue(member.value, name)
-      if (nestedValue) {
-        return nestedValue
-      }
-    }
-  }
-
-  return null
-}
-
 function parseProvisioningResult(
   result: T.ActionResult | null,
 ): NtfyProvisioning | null {
@@ -101,10 +69,13 @@ function parseProvisioningResult(
     return null
   }
 
-  const members = result.result.value as ActionResultMember[]
-  const publishUrl = findResultValue(members, 'publishUrl')
-  const token = findResultValue(members, 'token')
-  const topic = findResultValue(members, 'topic')
+  // ntfy translates member names; its publisher result has a fixed field order.
+  const [urlMember, tokenMember, topicMember] = result.result.value
+  const value = (member: T.ActionResultMember | undefined) =>
+    member?.type === 'single' ? member.value : null
+  const publishUrl = value(urlMember)
+  const token = value(tokenMember)
+  const topic = value(topicMember)
 
   if (!publishUrl || !token || !topic) {
     return null
@@ -116,10 +87,8 @@ function parseProvisioningResult(
 async function provisionNtfy(
   effects: T.Effects,
 ): Promise<NtfyProvisioning | null> {
-  // ntfy's withInput actions store the spec under the execute event id.
-  // Host effect RPCs mint a fresh procedureId per call unless we send the
-  // one getInput returned. The UI threads this as eventId; the effect
-  // param is procedureId (omitted from the generated TS types).
+  // withInput keys its saved spec by eventId; run calls must reuse it as
+  // procedureId, which is missing from the generated effect parameter type.
   const prev = await effects.action
     .getInput({
       packageId: 'ntfy',
@@ -153,14 +122,15 @@ async function provisionNtfy(
   return parseProvisioningResult(result)
 }
 
-/**
- * Mint (or drop) the cached publisher when ntfy appears, starts, or is
- * removed. Runs in init so setupMain never writes store.json after reading
- * it with `.const()`. `getStatus` is intentionally unfiltered: health-check
- * churn re-runs this cheaply, and that is what retries provisioning once
- * ntfy becomes running. Do not loop here — a successful action mints a
- * token even if parsing fails, and a tight retry would leak extras.
- */
+// No reactive reads: restore must clear the old token only once, before watchers.
+export const clearRestoredNtfy = sdk.setupOnInit(async (effects, kind) => {
+  if (kind === 'restore') {
+    await storeJson.merge(effects, { ntfy: undefined })
+  }
+})
+
+// Runs after dependency registration on every reactive pass. Cache successes;
+// do not loop on an unparseable result: the action has already minted a token.
 export const watchLocalNtfy = sdk.setupOnInit(async (effects) => {
   const status = await sdk.getStatus(effects, { packageId: 'ntfy' }).const()
   const storedNtfy = await storeJson.read((s) => s.ntfy).once()
@@ -187,12 +157,7 @@ export const watchLocalNtfy = sdk.setupOnInit(async (effects) => {
   )
 })
 
-/**
- * Package-provided defaults for Canary Wallet. User-saved settings remain
- * authoritative. The live bridge URL is passed even before a token exists so
- * Settings can show the local ntfy option; managed auth is added once the
- * publisher is cached.
- */
+// Saved application settings take precedence over these package defaults.
 export async function getLocalNtfyEnv(
   effects: T.Effects,
   storedNtfy: NtfyProvisioning | undefined,

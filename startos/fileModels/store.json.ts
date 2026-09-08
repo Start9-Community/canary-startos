@@ -10,8 +10,7 @@ const shape = z.object({
   jwtSecret: z
     .string()
     .catch(utils.getDefaultString({ charset: 'a-z,A-Z,0-9', len: 64 })),
-  // Cached ntfy Provision Publisher output. The action mints a new token on
-  // every run, so this must survive restarts. Cleared when ntfy is removed.
+  // Keep minted credentials across restarts; clear on restore or ntfy removal.
   ntfy: z
     .object({
       publishUrl: z.string(),
