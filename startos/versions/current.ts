@@ -1,13 +1,13 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.6.4:0',
+  version: '1.7.0:0',
   releaseNotes: {
-    en_US: `Fixes self-hosted ntfy so private Docker, LAN, and Tailscale URLs work. Also keeps notification identities and delivery errors out of logs.`,
-    es_ES: `Corrige ntfy en auto-hospedaje para que funcionen las URL privadas de Docker, LAN y Tailscale. También evita que las identidades de notificación y los errores de entrega aparezcan en los registros.`,
-    de_DE: `Behebt selbst gehostetes ntfy, damit private Docker-, LAN- und Tailscale-URLs funktionieren. Hält außerdem Benachrichtigungsidentitäten und Zustellfehler aus den Protokollen fern.`,
-    pl_PL: `Naprawia samodzielnie hostowane ntfy, aby działały prywatne adresy URL Dockera, LAN i Tailscale. Usuwa też tożsamości powiadomień i błędy dostarczania z dzienników.`,
-    fr_FR: `Corrige ntfy en auto-hébergement pour que les URL privées Docker, LAN et Tailscale fonctionnent. Empêche également les identités de notification et les erreurs de livraison d’apparaître dans les journaux.`,
+    en_US: `Adds Telegram alerts, BIP-329 transaction labels, and optional Tor SOCKS so NIP-17 DMs can reach .onion inbox relays.`,
+    es_ES: `Añade alertas de Telegram, etiquetas de transacción BIP-329 y SOCKS Tor opcional para que los DM NIP-17 lleguen a relés de bandeja .onion.`,
+    de_DE: `Fügt Telegram-Benachrichtigungen, BIP-329-Transaktionslabels und optionalen Tor-SOCKS hinzu, damit NIP-17-DMs .onion-Inbox-Relays erreichen.`,
+    pl_PL: `Dodaje alerty Telegram, etykiety transakcji BIP-329 oraz opcjonalny SOCKS Tor, aby wiadomości NIP-17 DM docierały do przekaźników skrzynki .onion.`,
+    fr_FR: `Ajoute les alertes Telegram, les étiquettes de transaction BIP-329 et un SOCKS Tor optionnel pour que les DM NIP-17 atteignent les relais de boîte .onion.`,
   },
   migrations: {},
 })
