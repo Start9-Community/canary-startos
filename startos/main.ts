@@ -1,10 +1,14 @@
 import { storeJson } from './fileModels/store.json'
-import { getFrontendOriginEnv } from './frontendOrigins'
 import { i18n } from './i18n'
-import { getLocalExplorerEnv } from './localExplorers'
 import { getLocalNtfyEnv } from './localNtfy'
 import { sdk } from './sdk'
-import { getElectrumUrl, serverPort, uiPort } from './utils'
+import {
+  getElectrumUrl,
+  getFrontendOriginEnv,
+  getLocalExplorerEnv,
+  serverPort,
+  uiPort,
+} from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   /**
