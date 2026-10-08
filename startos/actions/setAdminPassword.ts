@@ -6,12 +6,16 @@ import { sdk } from '../sdk'
 export const setAdminPassword = sdk.Action.withoutInput(
   'set-admin-password',
 
-  async () => ({
+  async ({ effects }) => ({
     name: i18n('Set Admin Password'),
     description: i18n(
       '<p>Generate a new random password for the Canary Wallet admin account.</p><p>This action can only run while Canary Wallet is stopped, so the backend loads the new password the next time it starts.</p>',
     ),
-    warning: null,
+    warning: (await storeJson.read((s) => s.adminPassword).const(effects))
+      ? i18n(
+          'This replaces the current admin password, and the old one stops working.',
+        )
+      : null,
     allowedStatuses: 'only-stopped',
     group: null,
     visibility: 'enabled',

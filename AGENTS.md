@@ -18,17 +18,23 @@ Freshly scaffolded? Work the
 guide page, not a file in this repo — read it, don't copy it in.
 
 Keep `README.md` (technical reference for an AI support or administering agent) and
-`instructions.md` (end-user docs) in sync with your changes.
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
 
-**Bugs and feature requests are GitHub issues on this repo** — file them as you find them.
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
 Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
 verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
 - **Import each Electrum server's host id and port from its own package** (`electrs-startos/startos/utils`, `fulcrum-startos/startos/utils`) rather than hardcoding — a change on their side then breaks the build here instead of silently misconnecting.
-- **`electrs`'s version floor is load-bearing, not hygiene.** Earlier revisions fetch blocks on bitcoind's unprivileged p2p listener, where Canary's address-history queries get the connection dropped — and electrs exits rather than reconnecting, landing in a restart loop under exactly this workload. Don't lower it.
-- **The Electrum dependency is declared from the store, so the "no selection" branch must keep raising its task.** With nothing selected the package declares no Electrum dependency and `main` throws; the task is what gets the user out of that state. An installed ntfy service is declared independently.
-- **Explorer lookups are `.catch(() => [])` on purpose.** These are not dependencies; an uninstalled explorer must degrade to "no links", never to a failed start.
-- **ntfy must be in `current_dependencies` before calling Provision Publisher.** The action is `access: 'dependent'`; detecting the host with `sdk.host.get` is not enough.
-- **Cache the ntfy publisher token in `store.json`.** Provision Publisher mints a new token on every run. Write it from init (`watchLocalNtfy`), never from `setupMain` after a `.const()` read of the store.
+- **Don't lower electrs's version floor.** Earlier revisions drop the bitcoind connection under Canary's address-history queries and land in a restart loop.
+- **Keep the explorer lookups' `.catch(() => [])`.** An uninstalled explorer must degrade to "no links", never to a failed start.
+- **Provision the ntfy publisher only from the ntfy dependency's `withInit`, and write the token from there, never from `setupMain`.** Provision Publisher is `access: 'dependent'` and mints a new token on every run.

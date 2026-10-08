@@ -7,11 +7,14 @@ const { InputSpec, Value } = sdk
 const inputSpec = InputSpec.of({
   electrum: Value.select({
     name: i18n('Electrum Server'),
+    description: i18n(
+      '- Fulcrum: Fulcrum on this server answers address lookups.\n- Electrs: Electrs on this server answers address lookups.\nThe server you choose must be installed and running on this server.',
+    ),
     values: {
       fulcrum: i18n('Fulcrum'),
       electrs: i18n('Electrs'),
     },
-    default: 'fulcrum',
+    default: null,
   }),
 })
 
