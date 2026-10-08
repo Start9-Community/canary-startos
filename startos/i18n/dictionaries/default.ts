@@ -18,8 +18,9 @@ const dict = {
   Electrs: 22,
   'Select Electrum Server': 23,
   'Select which Electrum server to use for address lookups': 24,
+  '- Fulcrum: Fulcrum on this server answers address lookups.\n- Electrs: Electrs on this server answers address lookups.\nThe server you choose must be installed and running on this server.': 47,
 
-  // dependencies.ts
+  // init/taskSelectElectrum.ts
   'Canary Wallet requires an Electrum server to look up addresses': 30,
 
   // actions/setAdminPassword.ts
@@ -28,6 +29,7 @@ const dict = {
   'Canary Wallet Admin Password': 42,
   'Use this password to sign in to Canary Wallet.': 43,
   Password: 45,
+  'This replaces the current admin password, and the old one stops working.': 48,
 
   // init/watchCredentials.ts
   'Set the admin password before signing in to Canary Wallet': 46,

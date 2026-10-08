@@ -15,7 +15,7 @@
 
 1. Install **Fulcrum** or **Electrs** on StartOS and let it fully sync. Canary Wallet will not start until one is selected and running.
 2. On first install, StartOS posts a critical **Set Admin Password** task. Run it and copy the generated password to a password manager — you'll need it to sign in.
-3. Run the **Select Electrum Server** action and pick which dependency Canary Wallet should talk to (defaults to Fulcrum).
+3. StartOS also posts a critical **Select Electrum Server** task. Run it and pick the server you installed in step 1; nothing is preselected.
 4. Open the **Web UI** and sign in with the password from step 2.
 
 ## Using Canary Wallet
@@ -69,4 +69,4 @@ Set per-wallet thresholds in the Web UI to fire when a balance goes **above**, *
 ### Actions
 
 - **Select Electrum Server** — pick **Fulcrum** or **Electrs** as Canary Wallet's address-lookup backend. Re-run any time to switch.
-- **Set Admin Password** — generate a new random password for the built-in admin account. Stop Canary Wallet before running it to rotate or recover access.
+- **Set Admin Password** — generate a new random password for the built-in admin account. Stop Canary Wallet before running it to rotate or recover access. Once a password is set, StartOS asks you to confirm before replacing it, since the old one stops working.

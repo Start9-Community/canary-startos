@@ -92,15 +92,15 @@ Canary Wallet's own settings are its business and live in the same volume; the p
 | Bitcoin Explorer | Never required — used only for explorer links, if installed       |
 | ntfy             | Declared `kind: 'exists'`, only while ntfy itself is installed    |
 
-**Canary Wallet cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, the package declares no Electrum dependency and raises a task instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not. An installed ntfy service is declared independently of that choice.
+**Canary Wallet cannot run without an Electrum server.** The choice is not defaulted, because the two are not interchangeable in cost — so until one is selected, neither Electrum dependency is enabled and a task is raised instead. Once selected, that server becomes a hard `running` dependency with its own health checks required, and the other is not. An installed ntfy service is declared independently of that choice.
 
 The selected server's address is resolved over the internal bridge, pinned to the **plaintext** leg: both Fulcrum and Electrs publish a plaintext and a TLS address on that binding, and Canary Wallet speaks the plaintext protocol. Until the selected server's binding exists the address resolves to nothing and the service refuses to start, healing on its own once it appears.
 
-**Mempool and Bitcoin Explorer are a different kind of optional.** They are never depended on; the package simply looks for them and, if present, hands Canary Wallet their browser-reachable addresses so transaction links point at your own explorer instead of a public one. Nothing breaks when they are absent — the links just go elsewhere.
+**Mempool and Bitcoin Explorer are a different kind of optional.** They are declared, with any version accepted, but never enabled, so they never become current dependencies; the package simply looks for them and, if present, hands Canary Wallet their browser-reachable addresses so transaction links point at your own explorer instead of a public one. Nothing breaks when they are absent — the links just go elsewhere.
 
 Only addresses a browser can actually open are passed: the internal bridge and loopback are filtered out, and anything that is not HTTP or HTTPS is dropped.
 
-**ntfy is optional until it is installed.** Detection via the UI host is not enough to call Provision Publisher: that action is `access: 'dependent'`, so the package adds ntfy to `current_dependencies` whenever the host exists, and drops it again when ntfy is removed. The declared floor is the first ntfy release whose Provision Publisher accepts dependent callers and returns a bridge publish URL. It does not require ntfy to remain running or healthy. Dependency registration and publisher provisioning share one reactive handler, so registration completes before provisioning even when ntfy is installed later.
+**ntfy is optional until it is installed.** Detection via the UI host is not enough to call Provision Publisher: that action is `access: 'dependent'`, so the package adds ntfy to `current_dependencies` whenever the host exists, and drops it again when ntfy is removed. The declared floor is the first ntfy release whose Provision Publisher accepts dependent callers and returns a bridge publish URL. It does not require ntfy to remain running or healthy. Publisher provisioning is the ntfy dependency's own init handler, which StartOS runs only while ntfy is enabled and after the requirements are published, so registration completes before provisioning even when ntfy is installed later.
 
 When ntfy is running, init calls Provision Publisher with publisher id `canary` and topic `canary`, caches the returned token, and `setupMain` passes `CANARY_NTFY_SERVER_URL`, `CANARY_NTFY_TOKEN`, and `CANARY_NTFY_TOPIC`. Those are defaults: settings saved in Canary Wallet stay authoritative, the wrapper exports the managed token for the application to use with the detected local integration, and wallet contacts are not created automatically. The publish URL is ntfy's live internal bridge address, not the retired `ntfy.startos` hostname. Removing ntfy clears the cache and the environment variables on the next reactive restart.
 
@@ -113,6 +113,8 @@ One interface.
 | Web UI    | `ui` | ui   | 3000 | The web interface of Canary Wallet |
 
 Bound on the `ui-multi` MultiHost over HTTP and not masked. The back end listens on 3001 inside the service and is never exported.
+
+A server upgraded from the StartOS 0.3.5 package also carried that version's `web-ui` host. `1.7.0:1`'s migration retires it, freeing its port; addresses added to it are not moved to `ui-multi`.
 
 At startup, the package reads every enabled browser-reachable URL from this
 interface. It passes a preferred HTTPS `.local` URL as `FRONTEND_URL` and all
@@ -128,7 +130,7 @@ Install seeds the store and nothing else, then raises **two** critical tasks —
 1. **Select an Electrum server.** Until this is set the package declares no dependency, and `main` throws rather than starting.
 2. **Set the admin password.** There is no default credential.
 
-The order does not matter, but both are required before the service will run. The Electrum task is raised from the dependency setup rather than from init, so it appears whenever the selection is missing — including if it is somehow cleared later.
+The order does not matter, but both are required before the service will run. The Electrum task is raised by a reactive init step, so it appears whenever the selection is missing — including if it is somehow cleared later.
 
 Once running, the server syncs on a fixed interval and the front end serves the interface.
 
@@ -140,7 +142,8 @@ Two actions, and between them they are the whole of setup.
 
 Chooses which Electrum server Canary Wallet reads from. Run it when its task appears, and again to switch servers.
 
-- **What it changes:** `electrum` in the store — and with it the declared dependency, the resolved server address, and whether the task is raised.
+- **Input:** the server, Fulcrum or Electrs. The field's description lists both; nothing is preselected until a choice is stored.
+- **What it changes:** `electrum` in the store — and with it the enabled dependency, the resolved server address, and whether the task is raised.
 - **Cost:** the service restarts and reconnects to the new server.
 - **Repeat safety:** idempotent; the last choice wins.
 - **What to expect after switching:** the newly selected server becomes a required running dependency, and the previous one stops being one. Canary Wallet re-reads history from the new server rather than migrating anything.
@@ -151,6 +154,7 @@ Sets the password for the web interface. Run it when its task appears, or to rot
 
 - **When to run it:** **only while stopped** — the password is read into the server's environment at start, so it is changed between runs rather than under a running server.
 - **What it changes:** `adminPassword` in the store.
+- **Confirmation:** once a password is set, StartOS warns that it will be replaced before running.
 - **Repeat safety:** re-runnable; the last value wins.
 - **Outputs:** the password.
 
@@ -232,8 +236,8 @@ startos_managed_env_vars:
 dependencies:
   - fulcrum # required only when selected; kind: running
   - electrs # required only when selected; kind: running
-  - mempool # never required; explorer links only
-  - bitcoin-explorer # never required; explorer links only
+  - mempool # declared, never enabled; explorer links only
+  - bitcoin-explorer # declared, never enabled; explorer links only
   - ntfy # required only while ntfy is installed; kind: exists
 interfaces:
   ui: { type: ui, port: 3000 } # the server on 3001 is internal only

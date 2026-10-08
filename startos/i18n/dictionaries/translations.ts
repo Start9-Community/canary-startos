@@ -21,6 +21,8 @@ export default {
     43: 'Usa esta contraseña para iniciar sesión en Canary Wallet.',
     45: 'Contraseña',
     46: 'Establece la contraseña de administrador antes de iniciar sesión en Canary Wallet',
+    47: '- Fulcrum: Fulcrum en este servidor responde a las búsquedas de direcciones.\n- Electrs: Electrs en este servidor responde a las búsquedas de direcciones.\nEl servidor que elijas debe estar instalado y en ejecución en este servidor.',
+    48: 'Esto reemplaza la contraseña de administrador actual, y la anterior deja de funcionar.',
   },
   de_DE: {
     1: 'Weboberfläche',
@@ -42,6 +44,8 @@ export default {
     43: 'Verwende dieses Passwort, um dich bei Canary Wallet anzumelden.',
     45: 'Passwort',
     46: 'Lege das Admin-Passwort fest, bevor du dich bei Canary Wallet anmeldest',
+    47: '- Fulcrum: Fulcrum auf diesem Server beantwortet Adressabfragen.\n- Electrs: Electrs auf diesem Server beantwortet Adressabfragen.\nDer gewählte Server muss auf diesem Server installiert sein und laufen.',
+    48: 'Dies ersetzt das aktuelle Admin-Passwort, und das alte funktioniert nicht mehr.',
   },
   pl_PL: {
     1: 'Interfejs webowy',
@@ -63,6 +67,8 @@ export default {
     43: 'Użyj tego hasła, aby zalogować się do Canary Wallet.',
     45: 'Hasło',
     46: 'Ustaw hasło administratora przed zalogowaniem się do Canary Wallet',
+    47: '- Fulcrum: Fulcrum na tym serwerze obsługuje wyszukiwanie adresów.\n- Electrs: Electrs na tym serwerze obsługuje wyszukiwanie adresów.\nWybrany serwer musi być zainstalowany i uruchomiony na tym serwerze.',
+    48: 'To zastępuje obecne hasło administratora, a poprzednie przestaje działać.',
   },
   fr_FR: {
     1: 'Interface web',
@@ -84,5 +90,7 @@ export default {
     43: 'Utilisez ce mot de passe pour vous connecter à Canary Wallet.',
     45: 'Mot de passe',
     46: 'Définissez le mot de passe administrateur avant de vous connecter à Canary Wallet',
+    47: "- Fulcrum : Fulcrum sur ce serveur répond aux recherches d'adresses.\n- Electrs : Electrs sur ce serveur répond aux recherches d'adresses.\nLe serveur choisi doit être installé et en cours d'exécution sur ce serveur.",
+    48: "Cela remplace le mot de passe administrateur actuel, et l'ancien cesse de fonctionner.",
   },
 } satisfies Record<string, LangDict>

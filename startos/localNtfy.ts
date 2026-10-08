@@ -15,12 +15,6 @@ export type NtfyProvisioning = {
   topic: string
 }
 
-const ntfyCurrentDependency = {
-  kind: 'exists' as const,
-  // First revision with dependent actions and bridge publish URLs.
-  versionRange: '>=2.26.3:0',
-}
-
 export async function isNtfyInstalled(effects: T.Effects): Promise<boolean> {
   return sdk.host
     .get(
@@ -29,12 +23,6 @@ export async function isNtfyInstalled(effects: T.Effects): Promise<boolean> {
       (host) => host !== null,
     )
     .const()
-}
-
-export async function ntfyDependency(
-  effects: T.Effects,
-): Promise<{ ntfy: typeof ntfyCurrentDependency } | Record<string, never>> {
-  return (await isNtfyInstalled(effects)) ? { ntfy: ntfyCurrentDependency } : {}
 }
 
 function ntfyBridgeUrl(host: utils.FilledHost | null): string | null {
@@ -87,33 +75,13 @@ function parseProvisioningResult(
 async function provisionNtfy(
   effects: T.Effects,
 ): Promise<NtfyProvisioning | null> {
-  // withInput keys its saved spec by eventId; run calls must reuse it as
-  // procedureId, which is missing from the generated effect parameter type.
-  const prev = await effects.action
-    .getInput({
-      packageId: 'ntfy',
-      actionId: 'provision-publisher',
-    })
-    .catch((error) => {
-      console.warn('Failed to load ntfy Provision Publisher input', error)
-      return null
-    })
-
-  if (!prev?.eventId) {
-    console.warn('ntfy Provision Publisher did not return an event id')
-    return null
-  }
-
-  const result = await effects.action
+  const result = await sdk.action
     .run({
+      effects,
       packageId: 'ntfy',
       actionId: 'provision-publisher',
-      procedureId: prev.eventId,
-      input: {
-        packageId: ntfyPublisherId,
-        topic: ntfyTopic,
-      },
-    } as Parameters<T.Effects['action']['run']>[0])
+      input: () => ({ packageId: ntfyPublisherId, topic: ntfyTopic }),
+    })
     .catch((error) => {
       console.warn('Failed to provision local ntfy publisher', error)
       return null
@@ -129,20 +97,18 @@ export const clearRestoredNtfy = sdk.setupOnInit(async (effects, kind) => {
   }
 })
 
-// Runs after dependency registration on every reactive pass. Cache successes;
-// do not loop on an unparseable result: the action has already minted a token.
-export const watchLocalNtfy = sdk.setupOnInit(async (effects) => {
+export const clearRemovedNtfy = sdk.setupOnInit(async (effects) => {
   const status = await sdk.getStatus(effects, { packageId: 'ntfy' }).const()
-  const storedNtfy = await storeJson.read((s) => s.ntfy).once()
-
-  if (status === null) {
-    if (storedNtfy) {
-      await storeJson.merge(effects, { ntfy: undefined })
-    }
-    return
+  if (status === null && (await storeJson.read((s) => s.ntfy).once())) {
+    await storeJson.merge(effects, { ntfy: undefined })
   }
+})
 
-  if (storedNtfy || !status.started) {
+// Cache successes; do not loop on an unparseable result: the action has
+// already minted a token.
+export async function provisionLocalNtfy(effects: T.Effects) {
+  const status = await sdk.getStatus(effects, { packageId: 'ntfy' }).const()
+  if (!status?.started || (await storeJson.read((s) => s.ntfy).once())) {
     return
   }
 
@@ -155,7 +121,7 @@ export const watchLocalNtfy = sdk.setupOnInit(async (effects) => {
   console.warn(
     'Local ntfy is running but Provision Publisher did not return credentials',
   )
-})
+}
 
 // Saved application settings take precedence over these package defaults.
 export async function getLocalNtfyEnv(

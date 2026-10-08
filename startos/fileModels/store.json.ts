@@ -1,7 +1,7 @@
 import { FileHelper, utils, z } from '@start9labs/start-sdk'
 import { sdk } from '../sdk'
 
-const shape = z.object({
+const shape = z.looseObject({
   electrum: z.enum(['fulcrum', 'electrs']).nullable().catch(null),
   adminPassword: z.string().optional().catch(undefined),
   // Its value comes from the .catch() default rather than an install-time seed,
@@ -12,7 +12,7 @@ const shape = z.object({
     .catch(utils.getDefaultString({ charset: 'a-z,A-Z,0-9', len: 64 })),
   // Keep minted credentials across restarts; clear on restore or ntfy removal.
   ntfy: z
-    .object({
+    .looseObject({
       publishUrl: z.string(),
       token: z.string(),
       topic: z.string(),
