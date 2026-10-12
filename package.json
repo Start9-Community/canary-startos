@@ -1,7 +1,7 @@
 {
   "name": "canary-startos",
   "dependencies": {
-    "@start9labs/start-sdk": "3.0.3",
+    "@start9labs/start-sdk": "3.0.6",
     "bitcoin-explorer-startos": "github:Start9-Community/bitcoin-explorer-startos#next",
     "electrs-startos": "github:Start9Labs/electrs-startos#next",
     "fulcrum-startos": "github:Start9Labs/fulcrum-startos#next",
