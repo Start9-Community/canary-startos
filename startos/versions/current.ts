@@ -1,21 +1,13 @@
-import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
+import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.7.0:2',
+  version: '1.7.1:0',
   releaseNotes: {
-    en_US:
-      'Restarting Canary Wallet while it is still starting stops every process of the previous run.',
-    es_ES:
-      'Reiniciar Canary Wallet mientras aún se está iniciando detiene todos los procesos de la ejecución anterior.',
-    de_DE:
-      'Ein Neustart von Canary Wallet, während es noch startet, beendet alle Prozesse des vorherigen Laufs.',
-    pl_PL:
-      'Ponowne uruchomienie Canary Wallet w trakcie uruchamiania zatrzymuje wszystkie procesy poprzedniego uruchomienia.',
-    fr_FR:
-      "Redémarrer Canary Wallet pendant son démarrage arrête tous les processus de l'exécution précédente.",
+    en_US: `Release notes will be added after testing.`,
+    es_ES: `Release notes will be added after testing.`,
+    de_DE: `Release notes will be added after testing.`,
+    pl_PL: `Release notes will be added after testing.`,
+    fr_FR: `Release notes will be added after testing.`,
   },
-  migrations: {
-    up: async ({ effects }) => {},
-    down: IMPOSSIBLE,
-  },
+  migrations: {},
 })
