@@ -2,6 +2,7 @@
   "name": "canary-startos",
   "dependencies": {
     "@start9labs/start-sdk": "3.0.6",
+    "bitcoin-core-startos": "github:Start9Labs/bitcoin-core-startos#next/32.x",
     "bitcoin-explorer-startos": "github:Start9-Community/bitcoin-explorer-startos#next",
     "electrs-startos": "github:Start9Labs/electrs-startos#next",
     "fulcrum-startos": "github:Start9Labs/fulcrum-startos#next",
@@ -9,7 +10,6 @@
     "ntfy-startos": "github:Start9Labs/ntfy-startos#next"
   },
   "overrides": {
-    "@start9labs/start-sdk": "$@start9labs/start-sdk",
-    "bitcoin-core-startos": "github:Start9Labs/bitcoin-core-startos#next/31.x"
+    "@start9labs/start-sdk": "$@start9labs/start-sdk"
   }
 }
