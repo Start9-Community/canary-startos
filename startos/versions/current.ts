@@ -1,28 +1,23 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '1.7.2:0',
+  version: '1.7.3:0',
   releaseNotes: {
-    en_US: `This update contains bug fixes and security updates:
-  - Fixed a rare race where a newly added wallet could be removed during background cleanup
-  - Improved responsiveness by moving password hashing, wallet storage and Electrum reconnects off the main workers
-  - Updated Next.js and backend dependencies to fix several security advisories`,
-    es_ES: `Esta actualización incluye correcciones de errores y actualizaciones de seguridad:
-  - Corregida una condición de carrera poco frecuente por la que una cartera recién añadida podía eliminarse durante la limpieza en segundo plano
-  - Mejorada la capacidad de respuesta al sacar el hash de contraseñas, el almacenamiento de carteras y las reconexiones a Electrum de los procesos principales
-  - Actualizados Next.js y las dependencias del backend para corregir varios avisos de seguridad`,
-    de_DE: `Dieses Update enthält Fehlerbehebungen und Sicherheitsupdates:
-  - Eine seltene Race Condition behoben, durch die eine neu hinzugefügte Wallet bei der Bereinigung im Hintergrund entfernt werden konnte
-  - Reaktionsfähigkeit verbessert, indem Passwort-Hashing, Wallet-Speicherung und Electrum-Neuverbindungen aus den Haupt-Workern ausgelagert wurden
-  - Next.js und Backend-Abhängigkeiten aktualisiert, um mehrere Sicherheitshinweise zu beheben`,
-    pl_PL: `Ta aktualizacja zawiera poprawki błędów i aktualizacje bezpieczeństwa:
-  - Naprawiono rzadki wyścig, w którym nowo dodany portfel mógł zostać usunięty podczas czyszczenia w tle
-  - Poprawiono responsywność dzięki przeniesieniu haszowania haseł, zapisu portfeli i ponownych połączeń z Electrum poza główne wątki robocze
-  - Zaktualizowano Next.js i zależności backendu, aby usunąć kilka luk bezpieczeństwa`,
-    fr_FR: `Cette mise à jour contient des corrections de bugs et des mises à jour de sécurité :
-  - Correction d'une situation de concurrence rare qui pouvait supprimer un portefeuille nouvellement ajouté lors du nettoyage en arrière-plan
-  - Amélioration de la réactivité en déplaçant le hachage des mots de passe, le stockage des portefeuilles et les reconnexions Electrum hors des workers principaux
-  - Mise à jour de Next.js et des dépendances du backend pour corriger plusieurs avis de sécurité`,
+    en_US: `This update contains bug fixes and dependency updates:
+  - Slow Electrum servers, such as electrs with a large wallet history, now get more time to answer, so wallets sync instead of timing out
+  - Updated frontend and backend dependencies`,
+    es_ES: `Esta actualización incluye correcciones de errores y actualizaciones de dependencias:
+  - Los servidores Electrum lentos, como electrs con un historial de cartera grande, ahora tienen más tiempo para responder, de modo que las carteras se sincronizan en lugar de agotar el tiempo de espera
+  - Actualizadas las dependencias del frontend y del backend`,
+    de_DE: `Dieses Update enthält Fehlerbehebungen und aktualisierte Abhängigkeiten:
+  - Langsame Electrum-Server, etwa electrs mit einer umfangreichen Wallet-Historie, haben jetzt mehr Zeit zu antworten, sodass Wallets synchronisiert werden, statt in eine Zeitüberschreitung zu laufen
+  - Frontend- und Backend-Abhängigkeiten aktualisiert`,
+    pl_PL: `Ta aktualizacja zawiera poprawki błędów i aktualizacje zależności:
+  - Wolne serwery Electrum, takie jak electrs z dużą historią portfela, mają teraz więcej czasu na odpowiedź, dzięki czemu portfele synchronizują się zamiast przekraczać limit czasu
+  - Zaktualizowano zależności frontendu i backendu`,
+    fr_FR: `Cette mise à jour contient des corrections de bugs et des mises à jour de dépendances :
+  - Les serveurs Electrum lents, comme electrs avec un historique de portefeuille important, disposent désormais de plus de temps pour répondre, afin que les portefeuilles se synchronisent au lieu d'expirer
+  - Mise à jour des dépendances du frontend et du backend`,
   },
   migrations: {},
 })
